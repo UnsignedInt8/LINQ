@@ -10,28 +10,38 @@ function* linq(iterable) {
 }
 
 /**
- * where
+ * Filters a sequence of values based on a predicate.
+ * 
+ * @param {Function} predicate The filter function called per iteraction.
+ * 
+ * predicate: (T, index) -> Boolean
  */
 function* where(predicate) {
+  let i = 0;
+  
   for (let item of this) {
-    if (predicate(item)) {
+    if (predicate(item, i)) {
       yield item;
     }
+    
+    i++;
   }
 }
 
-function* filter(predicate) {
-  return this.where(predicate);
-}
-
+/**
+ * Projects each element of a sequence into a new form.
+ * 
+ * @param {Function} transform The transform function called per interaction.
+ * 
+ * transform: (T, index) -> any
+ */
 function* select(transform) {
+  let i = 0;
+  
   for (let item of this) {
-    yield transform(item);
+    yield transform(item, i);
+    i++;
   }
-}
-
-function* map(transform) {
-  return this.select(transform);
 }
 
 function toArray() {
