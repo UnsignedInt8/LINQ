@@ -1,0 +1,24 @@
+{
+  "name": "kinq",
+  "version": "0.0.1",
+  "description": "LINQ for Node.js based on ES6",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/SunshinyNeko/Kinq.git"
+  },
+  "keywords": [
+    "LINQ",
+    "Node",
+    "ES6"
+  ],
+  "author": "SunshinyNeko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SunshinyNeko/Kinq/issues"
+  },
+  "homepage": "https://github.com/SunshinyNeko/Kinq#readme"
+}
