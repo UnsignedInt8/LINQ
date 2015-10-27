@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/SunshinyNeko/Kinq/issues"
   },
-  "homepage": "https://github.com/SunshinyNeko/Kinq#readme"
+  "homepage": "https://github.com/SunshinyNeko/Kinq#readme",
+  "devDependencies": {
+    "mocha": "^2.3.3"
+  }
 }
