@@ -17,5 +17,13 @@ describe('test any operator', () => {
   it('should return false', () => {
     let r = [].any(i => false);
     assert.equal(r, false);
-  })
+  });
+  
+  it('should be true', () => {
+    assert.equal([1].any(), true);
+  });
+  
+  it('should be false', () => {
+    assert.equal([].any(), false);
+  });
 })

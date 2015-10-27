@@ -29,11 +29,15 @@ function all(predicate) {
 /**
  * Determines whether a sequence contains any elements.
  * 
- * @param {Function} predicate The function called per iteraction till returns true.
+ * @param {(Function|null)} predicate The function called per iteraction till returns true.
  * @return Any elements satisfy a condition returns true, or returns false.
  * predicate: (T) -> Boolean
  */
 function any(predicate) {
+  if (!predicate) {
+    return any_noArgs.apply(this);
+  }
+  
   for (let item of this) {
     if (predicate(item)) {
       return true;
@@ -42,6 +46,25 @@ function any(predicate) {
   
   return false;
 }
+
+function any_noArgs() {
+  for (let item of this) {
+    if (item) return true;
+  }
+  
+  return false;
+}
+
+/**
+ * Computes the average of a sequence. The elements of this sequence should be Number.
+ * 
+ * @return Return the average of a sequence.
+ */
+function average() {
+  
+}
+
+
 
 /**
  * Projects each element of a sequence into a new form.
