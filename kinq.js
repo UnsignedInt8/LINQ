@@ -64,7 +64,28 @@ function average() {
   
 }
 
+/**
+ * Concatenates two sequences.
+ * 
+ * @param otherSequence The other iterable sequence
+ */
+function* concatenate(otherSequence) {
+  for (let item of this) {
+    yield item;
+  }
+  
+  for (let otherItem of otherSequence) {
+    yield otherItem;
+  }
+}
 
+function contains(predicate) {
+  for (let item of this) {
+    if (predicate(item)) return true;
+  }
+  
+  return false;
+}
 
 /**
  * Projects each element of a sequence into a new form.
@@ -109,9 +130,10 @@ function toList() {
   return Array.from(this);
 }
 
-module.exports = function() {
+module.exports = function(options) {
+  options = options || { safeMode: false };
   
-  let linqOperators = [all, any, where, select, toArray, toList];
+  let linqOperators = [all, any, average, concatenate, contains, where, select, toArray, toList];
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
@@ -122,4 +144,6 @@ module.exports = function() {
   Array.prototype.linq = function() { return linq(this); };
   Object.assign(Array.prototype, linqChain);
   
+  let x = [1, 2, 3].concatenate(['a', 'b', 'c']).toArray();
+  console.log(x);
 }
