@@ -85,7 +85,7 @@ function* concatenate(otherSequence) {
  */
 function contains(item, equalityComparer) {
   if (typeof equalityComparer === 'function') {
-    return contains_byComparer.apply(this, arguments);
+    return contains_byEqualityComparer.apply(this, arguments);
   }
   
   for (let i of this) {
@@ -95,12 +95,42 @@ function contains(item, equalityComparer) {
   return false;
 }
 
-function contains_byComparer(item, equalityComparer) {
+function contains_byEqualityComparer(item, equalityComparer) {
   for (let i of this) {
     if (equalityComparer(i, item)) return true;
   }
   
   return false;
+}
+
+/**
+ * Returns a number that represents how many elements in the specified sequence satisfy a condition.
+ * 
+ * @param {(Function|null)} predicate The condition for compute item counts
+ * @return Return the count which satisfy a condition.
+ */
+function count(predicate) {
+  if (typeof predicate === 'function') {
+    return count_byPredicate.apply(this, arguments);
+  }
+  
+  let c = 0;
+  
+  for (let item of this) {
+    c++;
+  }
+  
+  return c;
+}
+
+function count_byPredicate(predicate) {
+  let c = 0;
+  
+  for (let item of this) {
+    if (predicate(item)) c++;
+  }
+  
+  return c;
 }
 
 /**
@@ -149,7 +179,7 @@ function toList() {
 module.exports = function(options) {
   options = options || { safeMode: false };
   
-  let linqOperators = [all, any, average, concatenate, contains, where, select, toArray, toList];
+  let linqOperators = [all, any, average, concatenate, contains, count, where, select, toArray, toList];
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
