@@ -79,9 +79,9 @@ function* concatenate(otherSequence) {
   }
 }
 
-function contains(predicate) {
-  for (let item of this) {
-    if (predicate(item)) return true;
+function contains(item) {
+  for (let i of this) {
+    if (item === i) return true;
   }
   
   return false;
@@ -144,6 +144,4 @@ module.exports = function(options) {
   Array.prototype.linq = function() { return linq(this); };
   Object.assign(Array.prototype, linqChain);
   
-  let x = [1, 2, 3].concatenate(['a', 'b', 'c']).toArray();
-  console.log(x);
 }
