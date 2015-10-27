@@ -10,22 +10,37 @@ function* linq(iterable) {
 }
 
 /**
- * Filters a sequence of values based on a predicate.
+ * Determines whether all elements of a sequence satisfy a condition.
  * 
- * @param {Function} predicate The filter function called per iteraction.
- * 
- * predicate: (T, index) -> Boolean
+ * @param {Function} predicate The function called per iteraction till returns false.
+ * @return All elements satisfy a condition returns true, or returns false.
+ * predicate: (T) -> Boolean
  */
-function* where(predicate) {
-  let i = 0;
-  
+function all(predicate) {
   for (let item of this) {
-    if (predicate(item, i)) {
-      yield item;
+    if (!predicate(item)) {
+      return false;
     }
-    
-    i++;
   }
+  
+  return true;
+}
+
+/**
+ * Determines whether a sequence contains any elements.
+ * 
+ * @param {Function} predicate The function called per iteraction till returns true.
+ * @return Any elements satisfy a condition returns true, or returns false.
+ * predicate: (T) -> Boolean
+ */
+function any(predicate) {
+  for (let item of this) {
+    if (predicate(item)) {
+      return true;
+    }
+  }
+  
+  return false;
 }
 
 /**
@@ -44,6 +59,25 @@ function* select(transform) {
   }
 }
 
+/**
+ * Filters a sequence of values based on a predicate.
+ * 
+ * @param {Function} predicate The filter function called per iteraction.
+ * @return iterator
+ * predicate: (T, index) -> Boolean
+ */
+function* where(predicate) {
+  let i = 0;
+  
+  for (let item of this) {
+    if (predicate(item, i)) {
+      yield item;
+    }
+    
+    i++;
+  }
+}
+
 function toArray() {
   return Array.from(this);
 }
@@ -54,7 +88,7 @@ function toList() {
 
 module.exports = function() {
   
-  let linqOperators = [where, select, toArray, toList];
+  let linqOperators = [all, any, where, select, toArray, toList];
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
