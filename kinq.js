@@ -35,7 +35,7 @@ function all(predicate) {
  */
 function any(predicate) {
   if (!predicate) {
-    return any_noArgs.apply(this);
+    return any_withoutPredicate.apply(this);
   }
   
   for (let item of this) {
@@ -47,7 +47,7 @@ function any(predicate) {
   return false;
 }
 
-function any_noArgs() {
+function any_withoutPredicate() {
   for (let item of this) {
     if (item) return true;
   }
@@ -67,7 +67,8 @@ function average() {
 /**
  * Concatenates two sequences.
  * 
- * @param otherSequence The other iterable sequence
+ * @param otherSequence The other iterable sequence.
+ * @return The iterator of concatenated sequence.
  */
 function* concatenate(otherSequence) {
   for (let item of this) {
@@ -79,9 +80,24 @@ function* concatenate(otherSequence) {
   }
 }
 
-function contains(item) {
+/**
+ * Determines whether a sequence contains a specified element by using the default equality comparer.
+ */
+function contains(item, equalityComparer) {
+  if (typeof equalityComparer === 'function') {
+    return contains_byComparer.apply(this, arguments);
+  }
+  
   for (let i of this) {
     if (item === i) return true;
+  }
+  
+  return false;
+}
+
+function contains_byComparer(item, equalityComparer) {
+  for (let i of this) {
+    if (equalityComparer(i, item)) return true;
   }
   
   return false;
