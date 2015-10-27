@@ -61,3 +61,7 @@ declare module assert {
 declare module "power-assert" {
     export = assert;
 }
+
+declare module 'assert' {
+  export = assert;
+}

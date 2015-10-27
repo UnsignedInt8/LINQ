@@ -1,1 +1,1 @@
-module.exports = require('./kinq')();
+module.exports = require('./kinq');
