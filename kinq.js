@@ -1,5 +1,7 @@
 'use strict'
 
+let util = require('./utilities');
+
 /**
  * 
  */
@@ -88,18 +90,8 @@ function* concatenate(otherSequence) {
  * equalityComparer: (item1, item2) -> Boolean
  */
 function contains(item, equalityComparer) {
-  if (typeof equalityComparer === 'function') {
-    return contains_byEqualityComparer.apply(this, arguments);
-  }
+  equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer; 
   
-  for (let i of this) {
-    if (item === i) return true;
-  }
-  
-  return false;
-}
-
-function contains_byEqualityComparer(item, equalityComparer) {
   for (let i of this) {
     if (equalityComparer(i, item)) return true;
   }
@@ -221,6 +213,25 @@ function elementAtOrDefault(index, defaultValue) {
   }
   
   return defaultValue;
+}
+
+/**
+ * Returns an empty sequence.
+ */
+function empty() {
+  return [];
+}
+
+/**
+ * Produces the set difference of two sequences by using the default equality comparer to compare values.
+ * 
+ * 
+ */
+function* except(otherSequence) {
+  
+  for (let item of this) {
+    
+  }
 }
 
 /**
