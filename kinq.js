@@ -36,22 +36,10 @@ function all(predicate) {
  * predicate: (T) -> Boolean
  */
 function any(predicate) {
-  if (!predicate) {
-    return any_withoutPredicate.apply(this);
-  }
+  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
   
   for (let item of this) {
-    if (predicate(item)) {
-      return true;
-    }
-  }
-  
-  return false;
-}
-
-function any_withoutPredicate() {
-  for (let item of this) {
-    if (item) return true;
+    if (predicate(item)) return true;
   }
   
   return false;
