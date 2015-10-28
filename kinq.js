@@ -29,7 +29,7 @@ function all(predicate) {
 /**
  * Determines whether a sequence contains any elements.
  * 
- * @param {(Function|null)} predicate The function called per iteraction till returns true.
+ * @param {(Function|optional)} predicate The function called per iteraction till returns true.
  * @return Any elements satisfy a condition returns true, or returns false.
  * predicate: (T) -> Boolean
  */
@@ -82,6 +82,10 @@ function* concatenate(otherSequence) {
 
 /**
  * Determines whether a sequence contains a specified element by using the default equality comparer.
+ * 
+ * @param item The item which you want to check.
+ * @param {(Function|optional)} equalityComparer The equality comparer.
+ * equalityComparer: (item1, item2) -> Boolean
  */
 function contains(item, equalityComparer) {
   if (typeof equalityComparer === 'function') {
@@ -106,7 +110,7 @@ function contains_byEqualityComparer(item, equalityComparer) {
 /**
  * Returns a number that represents how many elements in the specified sequence satisfy a condition.
  * 
- * @param {(Function|null)} predicate The condition for compute item counts
+ * @param {(Function|optional)} predicate The condition for compute item counts
  * @return Return the count which satisfy a condition.
  */
 function count(predicate) {
@@ -131,6 +135,58 @@ function count_byPredicate(predicate) {
   }
   
   return c;
+}
+
+/**
+ * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
+ * 
+ * @param defaultValue The default value which you want to return.
+ */
+function* defaultIfEmpty(defaultValue) {
+  let i = 0;
+  
+  for (let item of this) {
+    yield item;
+    i++;
+  }
+  
+  if (i === 0) {
+    yield defaultValue;
+  }
+}
+
+/**
+ * Returns distinct elements from a sequence by using a specified equalityComparer to compare values.
+ * 
+ * @param {(Function|optional)} equalityComparer The equality comparer
+ * equalityComparer: (item1, item2) -> Boolean
+ */
+function* distinct(equalityComparer) {
+  let exists = new Set();
+  
+  for (let item of this) {
+    if (exists.has(item)) continue;
+    exists.add(item);
+    yield item;
+  }
+}
+
+function* distinct_withEqualityComparer(equalityComparer) {
+  let exists = new Set();
+  
+  let iterator = this[Symbol.iterator]();
+  let curValue = iterator.next();
+  let nextValue = iterator.next();
+  
+  yield curValue.value;
+  
+  while(!nextValue.done) {
+    if (equalityComparer(curValue.value, nextValue.value)) {
+      continue;
+    }
+    
+    // yield
+  }
 }
 
 /**
@@ -179,7 +235,7 @@ function toList() {
 module.exports = function(options) {
   options = options || { safeMode: false };
   
-  let linqOperators = [all, any, average, concatenate, contains, count, where, select, toArray, toList];
+  let linqOperators = [all, any, average, concatenate, contains, count, defaultIfEmpty, where, select, toArray, toList];
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
