@@ -168,32 +168,15 @@ function* defaultIfEmpty(defaultValue) {
  * equalityComparer: (item1, item2) -> Boolean
  */
 function* distinct(equalityComparer) {
-  let exists = new Set();
+  equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
+  
+  let exists = new util.ComparableSet();
   
   for (let item of this) {
     if (exists.has(item)) continue;
     exists.add(item);
     yield item;
   }
-}
-
-function* distinct_withEqualityComparer(equalityComparer) {
-  // let exists = new Set();
-  
-  // let iterator = this[Symbol.iterator]();
-  // let curValue = iterator.next();
-  // let nextValue = iterator.next();
-  
-  // yield curValue.value;
-  
-  // while(!nextValue.done) {
-  //   if (equalityComparer(curValue.value, nextValue.value)) {
-  //     continue;
-  //   }
-    
-  //   // yield
-  // }
-  throw new Error('Not implemented');
 }
 
 /**
@@ -344,6 +327,25 @@ function* groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
   }
 }
 
+/**
+ * Produces the set intersection of two sequences by using the specified equalityComparer to compare values.
+ * 
+ * @param otherSequence A sequence whose distinct elements that also appear in the first sequence will be returned.
+ * @param eqaulityComparer An equalityComparer to compare values.
+ * @return A sequence that contains the elements that form the set intersection of two sequences.
+ */
+function* intersect(otherSequence, equalityComparer) {
+  equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
+  
+  for (let item of this.distinct()) {
+    for (let otherItem of otherSequence) {
+      if (equalityComparer(item, otherItem)) {
+        yield item;
+        break;
+      }
+    }
+  }
+}
 
 /**
  * Projects each element of a sequence into a new form.
@@ -393,7 +395,7 @@ module.exports = function(options) {
   
   let linqOperators = [aggregate, all, any, average, concatenate, contains, 
     count, defaultIfEmpty, distinct, elementAt, except,
-    first, groupBy, groupJoin,
+    first, groupBy, groupJoin, intersect,
     where, select, toArray, toList];
   
   let linqChain = {};
