@@ -400,12 +400,20 @@ function last(predicate, defaultValue) {
 /**
  * Returns the maximum value in a sequence.
  * 
- * @param strict Strict mode, default is false
+ * @param transform A transform function to apply to each element.
  * @return The maximum value in the sequence.
  */
-function max(strict) {
-  let seq = strict ? this.where(i => typeof i === 'number') : this;
-  let maximum = linq(seq).first();
+function max(transform) {
+  let seq;
+  let maximum;
+  
+  if (typeof transform === 'function') {
+    seq = this.select(transform);
+    maximum = transform(linq(seq).first());
+  } else {
+    seq = this;
+    maximum = linq(seq).first();
+  }
   
   for (let item of seq) {
     maximum = item > maximum ? item : maximum;
@@ -415,11 +423,22 @@ function max(strict) {
 }
 
 /**
+ * Returns the minimum value in a sequence.
  * 
+ * @param transform A transform function to apply to each element.
+ * @return The minimum value in the sequence.
  */
-function min(strict) {
-  let seq = strict ? this.where(i => typeof i === 'number') : this;
-  let minimum = linq(seq).first();
+function min(transform) {
+  let seq;
+  let minimum;
+  
+  if (typeof transform === 'function') {
+    seq = this.select(transform);
+    minimum = transform(linq(seq).first());
+  } else {
+    seq = this;
+    minimum = linq(seq).first();
+  }
   
   for (let item of seq) {
     minimum = item < minimum ? item : minimum;
@@ -449,9 +468,9 @@ function* select(transform) {
  * 
  * @return The sum of the values in the sequence.
  */
-function sum(strict) {
+function sum(transform) {
   let sum = 0;
-  let seq = strict ? this.where(i => typeof i === 'number') : this;
+  let seq = typeof transform === 'function' ? this.select(transform) : this;
   
   for (let item of seq) {
     sum += Number.parseFloat(item);

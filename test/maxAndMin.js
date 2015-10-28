@@ -9,9 +9,9 @@ describe('test max operator', () => {
     assert.equal(max, '5');
   });
   
-  it('should be 2', () => {
-    let max = [1, -Infinity, -.2, 2, '5'].max(true);
-    assert.equal(max, 2);
+  it('should be 5.1', () => {
+    let max = [1, -Infinity, -.2, 2, '5.1'].max(i => Number.parseFloat(i));
+    assert.equal(max, '5.1');
   });
   
   it('should be undefined', () => {

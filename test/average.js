@@ -10,7 +10,7 @@ describe('test average operator', () => {
   });
   
   it('should be 16 with strict mode', () => {
-    let num = ['30', '0', 60.0, 20, '40'].average(true);
+    let num = ['30', '0', 60.0, 20, '40'].average(i => typeof i === 'number' ? i : 0);
     assert.equal(num, 16);
   });
   
