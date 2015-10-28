@@ -106,20 +106,8 @@ function contains(item, equalityComparer) {
  * @return Return the count which satisfy a condition.
  */
 function count(predicate) {
-  if (typeof predicate === 'function') {
-    return count_byPredicate.apply(this, arguments);
-  }
+  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
   
-  let c = 0;
-  
-  for (let item of this) {
-    c++;
-  }
-  
-  return c;
-}
-
-function count_byPredicate(predicate) {
   let c = 0;
   
   for (let item of this) {
