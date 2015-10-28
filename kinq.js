@@ -12,6 +12,35 @@ function* linq(iterable) {
 }
 
 /**
+ * Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value, and the specified function is used to select the result value.
+ * 
+ * @param seed The initial accumulator value.
+ * @param transform An accumulator function to be invoked on each element.
+ * @param resultResult A function to transform the final accumulator value into the result value.
+ * @return The transformed final accumulator value.
+ * transform: (current, next) -> result
+ */
+function aggregate(transform, resultSelector) {
+  return aggregate_seed_transform_selector.apply(this, [undefined, transform, resultSelector]);
+}
+
+function aggregate_seed_transform_selector(seed, transform, selector) {
+  
+  let it = this[Symbol.iterator]();
+  let current = it.next();
+  if (current.done) return current.value;
+  let result = seed || current.value;
+  
+  let next = it.next();
+  while(!next.done) {
+    result = transform(result, next.value);
+    next = it.next();
+  }
+  
+  return result;
+}
+
+/**
  * Determines whether all elements of a sequence satisfy a condition.
  * 
  * @param {Function} predicate The function called per iteraction till returns false.
@@ -271,8 +300,8 @@ function toList() {
 module.exports = function(options) {
   options = options || { safeMode: false };
   
-  let linqOperators = [all, any, average, concatenate, contains, count, 
-    defaultIfEmpty, distinct, elementAt, except,
+  let linqOperators = [aggregate, all, any, average, concatenate, contains, 
+    count, defaultIfEmpty, distinct, elementAt, except,
     first, 
     where, select, toArray, toList];
   
