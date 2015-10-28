@@ -17,4 +17,11 @@ describe('test except operator', () => {
     
     assert.deepEqual(a1.except(a2).toArray(), ['a']);
   });
+  
+  it('has custom comparer', () => {
+    let a1 = [8, 0, '1', '2'];
+    let a2 = [1, 2];
+    
+    assert.deepEqual(a1.except(a2, (item1, item2) => item1 == item2).toArray(), [8, 0]);
+  });
 });
