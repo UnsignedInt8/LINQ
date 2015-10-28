@@ -208,8 +208,9 @@ function empty() {
 function* except(otherSequence, equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
   
-  let equal = false;
   for (let item of this) {
+    let equal = false;
+    
     for (let otherItem of otherSequence) {
       if (equalityComparer(item, otherItem)) {
         equal = true;
