@@ -224,6 +224,23 @@ function* except(otherSequence, equalityComparer) {
 }
 
 /**
+ * Returns the first element in a sequence that satisfies a specified condition.
+ * 
+ * @param {(Function|optional)} predicate The function called per iteraction till returns true.
+ * @param defaultValue The optional default value.
+ * @return The first element which satisfy condition or default value.
+ */
+function first(predicate, defaultValue) {
+  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
+  
+  for (let item of this) {
+    if (predicate(item)) return item;
+  }
+  
+  return defaultValue;
+}
+
+/**
  * Projects each element of a sequence into a new form.
  * 
  * @param {Function} transform The transform function called per interaction.
@@ -271,6 +288,7 @@ module.exports = function(options) {
   
   let linqOperators = [all, any, average, concatenate, contains, count, 
     defaultIfEmpty, distinct, elementAt, elementAtOrDefault, except,
+    first, 
     where, select, toArray, toList];
   
   let linqChain = {};
