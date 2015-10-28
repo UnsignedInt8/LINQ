@@ -16,15 +16,20 @@ function* linq(iterable) {
  * 
  * @param seed The initial accumulator value.
  * @param transform An accumulator function to be invoked on each element.
- * @param resultResult A function to transform the final accumulator value into the result value.
+ * @param resultTransform A function to transform the final accumulator value into the result value.
  * @return The transformed final accumulator value.
  * transform: (current, next) -> result
  */
-function aggregate(transform, resultSelector) {
-  return aggregate_seed_transform_selector.apply(this, [undefined, transform, resultSelector]);
+function aggregate(transform) {
+  switch (arguments.length) {
+    case 1:
+      return aggregate_seed_transform_selector.apply(this, [undefined, arguments[0]]);
+    default:
+      return aggregate_seed_transform_selector.apply(this, arguments);
+  }
 }
 
-function aggregate_seed_transform_selector(seed, transform, selector) {
+function aggregate_seed_transform_selector(seed, transform, resultTransform) {
   
   let it = this[Symbol.iterator]();
   let current = it.next();
@@ -35,6 +40,10 @@ function aggregate_seed_transform_selector(seed, transform, selector) {
   while(!next.done) {
     result = transform(result, next.value);
     next = it.next();
+  }
+  
+  if (typeof resultTransform === 'function') {
+    return resultTransform(result);
   }
   
   return result;
