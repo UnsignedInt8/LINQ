@@ -191,6 +191,39 @@ function* distinct_withEqualityComparer(equalityComparer) {
 }
 
 /**
+ * Returns the element at a specified index in a sequence.
+ * 
+ * @param positon The zero-base index of element which you want.
+ * @return The element at a specified index 
+ */
+function elementAt(index) {
+  let i = 0;
+  
+  for (let item of this) {
+    if (i === index) return item;
+    i++;
+  }
+}
+
+/**
+ * Returns the element at a specified index in a sequence or a default value if the index is out of range.
+ * 
+ * @param position see _.elementAt
+ * @param defaultValue The default value if the index is out of range.
+ * @return The element at a specified index or default value.
+ */
+function elementAtOrDefault(index, defaultValue) {
+  let i = 0;
+  
+  for (let item of this) {
+    if (i === index) return item;
+    i++;
+  }
+  
+  return defaultValue;
+}
+
+/**
  * Projects each element of a sequence into a new form.
  * 
  * @param {Function} transform The transform function called per interaction.
@@ -236,7 +269,9 @@ function toList() {
 module.exports = function(options) {
   options = options || { safeMode: false };
   
-  let linqOperators = [all, any, average, concatenate, contains, count, defaultIfEmpty, distinct, where, select, toArray, toList];
+  let linqOperators = [all, any, average, concatenate, contains, count, 
+    defaultIfEmpty, distinct, elementAt, elementAtOrDefault, 
+    where, select, toArray, toList];
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
