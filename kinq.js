@@ -404,14 +404,28 @@ function last(predicate, defaultValue) {
  * @return The maximum value in the sequence.
  */
 function max(strict) {
-  let maximum = 0;
   let seq = strict ? this.where(i => typeof i === 'number') : this;
+  let maximum = linq(seq).first();
   
   for (let item of seq) {
     maximum = item > maximum ? item : maximum;
   }
   
   return maximum;
+}
+
+/**
+ * 
+ */
+function min(strict) {
+  let seq = strict ? this.where(i => typeof i === 'number') : this;
+  let minimum = linq(seq).first();
+  
+  for (let item of seq) {
+    minimum = item < minimum ? item : minimum;
+  }
+  
+  return minimum;
 }
 
 /**
@@ -479,7 +493,7 @@ module.exports = function(options) {
   let linqOperators = [aggregate, all, any, average, concatenate, contains, 
     count, defaultIfEmpty, distinct, elementAt, except,
     first, groupBy, groupJoin, intersect, joinWith,
-    last, sum,
+    last, max, min, sum, 
     where, select, toArray, toList];
   
   let linqChain = {};
