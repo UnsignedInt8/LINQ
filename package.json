@@ -4,7 +4,7 @@
   "description": "LINQ for Node.js based on ES6",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/**/*.js"
+    "test": "mocha test/**/*.js test/*.js"
   },
   "repository": {
     "type": "git",

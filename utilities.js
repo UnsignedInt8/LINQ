@@ -22,6 +22,11 @@ class ComparableSet extends Set {
     
     return false;
   }
+  
+  add(item) {
+    if (this.has(item)) return;
+    super.add(item);
+  }
 }
 
 module.exports = { defaultEqualityComparer, defaultPredicate, ComparableSet };

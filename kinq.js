@@ -168,9 +168,8 @@ function* defaultIfEmpty(defaultValue) {
  * equalityComparer: (item1, item2) -> Boolean
  */
 function* distinct(equalityComparer) {
+  let exists = typeof equalityComparer === 'function' ? new util.ComparableSet(equalityComparer) : new Set();
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
-  
-  let exists = new util.ComparableSet(equalityComparer);
   
   for (let item of this) {
     if (exists.has(item)) continue;
@@ -345,6 +344,10 @@ function* intersect(otherSequence, equalityComparer) {
       }
     }
   }
+}
+
+function* join() {
+  
 }
 
 /**
