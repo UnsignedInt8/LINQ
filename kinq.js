@@ -263,8 +263,33 @@ function first(predicate, defaultValue) {
   return defaultValue;
 }
 
-function* groupBy() {
+/**
+ * 
+ * @param keySelector A function to extract the key for each element.
+ */
+function* groupBy(keySelector, elementSelector, resultSelector, keyComparer) {
   
+  let group = () => {
+    let map = new Map();
+  
+    for (let item of this) {
+      let key = keySelector(item);
+      let el = elementSelector ? elementSelector(item) : item;
+      
+      let list = map.get(key);
+      if (list) {
+        list.push(el);
+      } else {
+        map.set(key, [el]);
+      }
+    }
+    
+    return map;  
+  }
+  
+  for (let [key, value] of group()) {
+    yield { key, value };
+  }
 }
 
 /**

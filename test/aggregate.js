@@ -14,7 +14,7 @@ describe('test aggregate(reduce) operator', () => {
   it('has 3 arguments', () => {
     let str = 'the quick brown fox jumps over the lazy dog';
     let words = str.split(' ');
-    let reversed = words.aggregate('', (cur, next) => next + ' ' + cur, (r) => r.toLowerCase());
-    assert.equal(reversed, 'dog lazy the over jumps fox brown quick ');
+    let reversed = words.aggregate('', (cur, next) => next + ' ' + cur, (r) => r.toUpperCase());
+    assert.equal(reversed, 'DOG LAZY THE OVER JUMPS FOX BROWN QUICK ');
   });
 });
