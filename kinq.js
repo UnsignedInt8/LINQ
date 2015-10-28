@@ -377,6 +377,26 @@ function* joinWith(inner, outerKeySelector, innerKeySelector, resultSelector, ke
 }
 
 /**
+ * Returns the last element of a sequence that satisfies a condition or a default value if no such element is found.
+ * 
+ * @param predicate A function to test each element for a condition.
+ * @param defaultValue The default value if no such element is found.
+ * @return Default value if the sequence is empty or if no elements pass the test in the predicate function; otherwise, the last element that passes the test in the predicate function.
+ */
+function last(predicate, defaultValue) {
+  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
+   
+  let lastValue;
+  let found = false;
+  for (let item of this.where(predicate)) {
+    lastValue = item;
+    found = true;
+  }
+  
+  return found ? lastValue : defaultValue;
+}
+
+/**
  * Projects each element of a sequence into a new form.
  * 
  * @param {Function} transform The transform function called per interaction.
@@ -425,6 +445,7 @@ module.exports = function(options) {
   let linqOperators = [aggregate, all, any, average, concatenate, contains, 
     count, defaultIfEmpty, distinct, elementAt, except,
     first, groupBy, groupJoin, intersect, joinWith,
+    last, 
     where, select, toArray, toList];
   
   let linqChain = {};

@@ -23,4 +23,9 @@ describe('test first operator', () => {
     let a = ['1', 2, '3'].first(i => i == 3);
     assert.equal(a, '3');
   });
+  
+  it('should be default value', () => {
+    let d = [1, 2, 3].first(i => false, 5);
+    assert.equal(d, 5);
+  })
 });
