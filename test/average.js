@@ -9,6 +9,11 @@ describe('test average operator', () => {
     assert.equal(num, 30);
   });
   
+  it('should be 16 with strict mode', () => {
+    let num = ['30', '0', 60.0, 20, '40'].average(true);
+    assert.equal(num, 16);
+  });
+  
   it('should be NaN', () => {
     let a = ['x', '', null, undefined, 2, 4].average();
     assert(Number.isNaN(a));

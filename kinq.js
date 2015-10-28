@@ -86,10 +86,11 @@ function any(predicate) {
 /**
  * Computes the average of a sequence. The elements of this sequence should be Number.
  * 
+ * @param strict Strict mode: 1 is not equal to '1'
  * @return Return the average of a sequence.
  */
-function average() {
-  return this.sum() / this.count();
+function average(strict) {
+  return this.sum(strict) / this.count();
 }
 
 /**
@@ -397,6 +398,23 @@ function last(predicate, defaultValue) {
 }
 
 /**
+ * Returns the maximum value in a sequence.
+ * 
+ * @param strict Strict mode, default is false
+ * @return The maximum value in the sequence.
+ */
+function max(strict) {
+  let maximum = 0;
+  let seq = strict ? this.where(i => typeof i === 'number') : this;
+  
+  for (let item of seq) {
+    maximum = item > maximum ? item : maximum;
+  }
+  
+  return maximum;
+}
+
+/**
  * Projects each element of a sequence into a new form.
  * 
  * @param {Function} transform The transform function called per interaction.
@@ -412,10 +430,16 @@ function* select(transform) {
   }
 }
 
-function sum() {
+/**
+ * Computes the sum of a sequence.
+ * 
+ * @return The sum of the values in the sequence.
+ */
+function sum(strict) {
   let sum = 0;
+  let seq = strict ? this.where(i => typeof i === 'number') : this;
   
-  for (let item of this) {
+  for (let item of seq) {
     sum += Number.parseFloat(item);
   }
   
