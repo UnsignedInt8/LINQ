@@ -162,25 +162,10 @@ function* distinct_withEqualityComparer(equalityComparer) {
  * Returns the element at a specified index in a sequence.
  * 
  * @param positon The zero-base index of element which you want.
- * @return The element at a specified index 
+ * @param defaultValue The default value if the index is out of range. 
+ * @return The element at a specified index or default value
  */
-function elementAt(index) {
-  let i = 0;
-  
-  for (let item of this) {
-    if (i === index) return item;
-    i++;
-  }
-}
-
-/**
- * Returns the element at a specified index in a sequence or a default value if the index is out of range.
- * 
- * @param position see _.elementAt
- * @param defaultValue The default value if the index is out of range.
- * @return The element at a specified index or default value.
- */
-function elementAtOrDefault(index, defaultValue) {
+function elementAt(index, defaultValue) {
   let i = 0;
   
   for (let item of this) {
@@ -287,7 +272,7 @@ module.exports = function(options) {
   options = options || { safeMode: false };
   
   let linqOperators = [all, any, average, concatenate, contains, count, 
-    defaultIfEmpty, distinct, elementAt, elementAtOrDefault, except,
+    defaultIfEmpty, distinct, elementAt, except,
     first, 
     where, select, toArray, toList];
   

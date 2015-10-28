@@ -15,7 +15,7 @@ describe('test elementAt/elementAtOrDefault operator', () => {
   });
   
   it('should be default value', () => {
-    let dv = [].elementAtOrDefault(10, 'defaultValue');
+    let dv = [].elementAt(10, 'defaultValue');
     assert.equal(dv, 'defaultValue');
   })
 });
