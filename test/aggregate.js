@@ -17,4 +17,9 @@ describe('test aggregate(reduce) operator', () => {
     let reversed = words.aggregate('', (cur, next) => next + ' ' + cur, (r) => r.toUpperCase());
     assert.equal(reversed, 'DOG LAZY THE OVER JUMPS FOX BROWN QUICK ');
   });
+  
+  it('just has 1 element', () => {
+    let a1 = [1];
+    assert.equal(a1.aggregate((cur, next) => cur + next), 1);
+  });
 });

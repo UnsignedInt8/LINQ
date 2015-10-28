@@ -346,8 +346,34 @@ function* intersect(otherSequence, equalityComparer) {
   }
 }
 
-function* join() {
+/**
+ * Correlates the elements of two sequences based on matching keys. A specified equalityComparer is used to compare keys.
+ * 
+ * @param join The sequence to join to the first sequence.
+ * @param outerKeySelector A function to extract the join key from each element of the first sequence.
+ * @param innerKeySelector A function to extract the join key from each element of the second sequence.
+ * @param resultSelector A function to create a result element from two matching elements.
+ * @param keyEqualityComparer An comparer compare keys.
+ * 
+ * outerKeySelector: (outerItem) -> key
+ * innerKeySelector: (innerItem) -> key
+ * resultSelector: (outerItem, innerItem) -> result
+ * keyEqualityComparer: (item1, item2) -> Boolean
+ */
+function* joinWith(inner, outerKeySelector, innerKeySelector, resultSelector, keyEqualityComparer) {
+  keyEqualityComparer = typeof keyEqualityComparer === 'function' ? keyEqualityComparer : util.defaultEqualityComparer;
   
+  for (let outerItem of this) {
+    let outerKey = outerKeySelector(outerItem);
+    
+    for(let innerItem of inner) {
+      let innerKey = innerKeySelector(innerItem);
+      
+      if (keyEqualityComparer(outerKey, innerKey)) {
+        yield resultSelector(outerItem, innerItem);
+      }
+    }
+  }
 }
 
 /**
@@ -398,7 +424,7 @@ module.exports = function(options) {
   
   let linqOperators = [aggregate, all, any, average, concatenate, contains, 
     count, defaultIfEmpty, distinct, elementAt, except,
-    first, groupBy, groupJoin, intersect,
+    first, groupBy, groupJoin, intersect, joinWith,
     where, select, toArray, toList];
   
   let linqChain = {};
