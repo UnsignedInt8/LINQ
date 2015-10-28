@@ -170,7 +170,7 @@ function* defaultIfEmpty(defaultValue) {
 function* distinct(equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
   
-  let exists = new util.ComparableSet();
+  let exists = new util.ComparableSet(equalityComparer);
   
   for (let item of this) {
     if (exists.has(item)) continue;
