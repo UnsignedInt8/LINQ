@@ -201,12 +201,24 @@ function empty() {
 /**
  * Produces the set difference of two sequences by using the default equality comparer to compare values.
  * 
- * 
+ * @param otherSequence A sequence whose elements that also occur in the first sequence will cause those elements to be removed from the returned sequence.
+ * @param {(Function|optional)} equalityComparer The equality comparer called per iteraction
+ * @return A sequence that contains the set difference of the elements of two sequences.
  */
-function* except(otherSequence) {
+function* except(otherSequence, equalityComparer) {
+  equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
   
+  let equal = false;
   for (let item of this) {
+    for (let otherItem of otherSequence) {
+      if (equalityComparer(item, otherItem)) {
+        equal = true;
+        break;
+      } 
+    }
     
+    if (equal) continue;
+    yield item;
   }
 }
 
@@ -257,7 +269,7 @@ module.exports = function(options) {
   options = options || { safeMode: false };
   
   let linqOperators = [all, any, average, concatenate, contains, count, 
-    defaultIfEmpty, distinct, elementAt, elementAtOrDefault, 
+    defaultIfEmpty, distinct, elementAt, elementAtOrDefault, except,
     where, select, toArray, toList];
   
   let linqChain = {};
