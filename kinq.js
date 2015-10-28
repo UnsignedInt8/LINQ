@@ -89,7 +89,7 @@ function any(predicate) {
  * @return Return the average of a sequence.
  */
 function average() {
-  
+  return this.sum() / this.count();
 }
 
 /**
@@ -412,6 +412,16 @@ function* select(transform) {
   }
 }
 
+function sum() {
+  let sum = 0;
+  
+  for (let item of this) {
+    sum += Number.parseFloat(item);
+  }
+  
+  return sum;
+}
+
 /**
  * Filters a sequence of values based on a predicate.
  * 
@@ -445,7 +455,7 @@ module.exports = function(options) {
   let linqOperators = [aggregate, all, any, average, concatenate, contains, 
     count, defaultIfEmpty, distinct, elementAt, except,
     first, groupBy, groupJoin, intersect, joinWith,
-    last, 
+    last, sum,
     where, select, toArray, toList];
   
   let linqChain = {};
