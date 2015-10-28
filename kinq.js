@@ -172,21 +172,22 @@ function* distinct(equalityComparer) {
 }
 
 function* distinct_withEqualityComparer(equalityComparer) {
-  let exists = new Set();
+  // let exists = new Set();
   
-  let iterator = this[Symbol.iterator]();
-  let curValue = iterator.next();
-  let nextValue = iterator.next();
+  // let iterator = this[Symbol.iterator]();
+  // let curValue = iterator.next();
+  // let nextValue = iterator.next();
   
-  yield curValue.value;
+  // yield curValue.value;
   
-  while(!nextValue.done) {
-    if (equalityComparer(curValue.value, nextValue.value)) {
-      continue;
-    }
+  // while(!nextValue.done) {
+  //   if (equalityComparer(curValue.value, nextValue.value)) {
+  //     continue;
+  //   }
     
-    // yield
-  }
+  //   // yield
+  // }
+  throw new Error('Not implemented');
 }
 
 /**
@@ -235,7 +236,7 @@ function toList() {
 module.exports = function(options) {
   options = options || { safeMode: false };
   
-  let linqOperators = [all, any, average, concatenate, contains, count, defaultIfEmpty, where, select, toArray, toList];
+  let linqOperators = [all, any, average, concatenate, contains, count, defaultIfEmpty, distinct, where, select, toArray, toList];
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
