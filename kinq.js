@@ -34,7 +34,7 @@ function aggregate_seed_transform_selector(seed, transform, resultTransform) {
   let it = this[Symbol.iterator]();
   let current = it.next();
   if (current.done) return current.value;
-  let result = seed || current.value;
+  let result = typeof seed === 'undefined' ? current.value : seed;
   
   let next = it.next();
   while(!next.done) {
@@ -261,6 +261,10 @@ function first(predicate, defaultValue) {
   }
   
   return defaultValue;
+}
+
+function* groupBy() {
+  
 }
 
 /**
