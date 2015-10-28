@@ -69,7 +69,7 @@ function all(predicate) {
 /**
  * Determines whether a sequence contains any elements.
  * 
- * @param {(Function|optional)} predicate The function called per iteraction till returns true.
+ * @param {(Function)} predicate The function called per iteraction till returns true.
  * @return Any elements satisfy a condition returns true, or returns false.
  * predicate: (T) -> Boolean
  */
@@ -112,7 +112,7 @@ function* concatenate(otherSequence) {
  * Determines whether a sequence contains a specified element by using the default equality comparer.
  * 
  * @param item The item which you want to check.
- * @param {(Function|optional)} equalityComparer The equality comparer.
+ * @param {(Function)} equalityComparer The equality comparer.
  * equalityComparer: (item1, item2) -> Boolean
  */
 function contains(item, equalityComparer) {
@@ -128,7 +128,7 @@ function contains(item, equalityComparer) {
 /**
  * Returns a number that represents how many elements in the specified sequence satisfy a condition.
  * 
- * @param {(Function|optional)} predicate The condition for compute item counts
+ * @param {(Function)} predicate The condition for compute item counts
  * @return Return the count which satisfy a condition.
  */
 function count(predicate) {
@@ -164,7 +164,7 @@ function* defaultIfEmpty(defaultValue) {
 /**
  * Returns distinct elements from a sequence by using a specified equalityComparer to compare values.
  * 
- * @param {(Function|optional)} equalityComparer The equality comparer
+ * @param {(Function)} equalityComparer The equality comparer
  * equalityComparer: (item1, item2) -> Boolean
  */
 function* distinct(equalityComparer) {
@@ -225,7 +225,7 @@ function empty() {
  * Produces the set difference of two sequences by using the default equality comparer to compare values.
  * 
  * @param otherSequence A sequence whose elements that also occur in the first sequence will cause those elements to be removed from the returned sequence.
- * @param {(Function|optional)} equalityComparer The equality comparer called per iteraction
+ * @param {(Function)} equalityComparer The equality comparer called per iteraction
  * @return A sequence that contains the set difference of the elements of two sequences.
  */
 function* except(otherSequence, equalityComparer) {
@@ -249,8 +249,8 @@ function* except(otherSequence, equalityComparer) {
 /**
  * Returns the first element in a sequence that satisfies a specified condition.
  * 
- * @param {(Function|optional)} predicate The function called per iteraction till returns true.
- * @param defaultValue The optional default value.
+ * @param {(Function)} predicate The function called per iteraction till returns true.
+ * @param defaultValue The default value.
  * @return The first element which satisfy condition or default value.
  */
 function first(predicate, defaultValue) {
@@ -264,10 +264,14 @@ function first(predicate, defaultValue) {
 }
 
 /**
+ * Groups the elements of a sequence according to a specified key selector function and projects the elements for each group by using a specified function.
  * 
- * @param keySelector A function to extract the key for each element.
+ * @param keySelector A function to extract the key for each element. (Required)
+ * @param elementSelector A function to map each source element to an element. (Optional)
+ * @param resultTransform A function to create a result value from each group. (Optional)
+ * @return Returns iterable grouped items. Each item is { key: key, value: [items] }
  */
-function* groupBy(keySelector, elementSelector, resultSelector, keyComparer) {
+function* groupBy(keySelector, elementSelector, resultTransform) {
   
   let group = () => {
     let map = new Map();
@@ -287,10 +291,59 @@ function* groupBy(keySelector, elementSelector, resultSelector, keyComparer) {
     return map;  
   }
   
-  for (let [key, value] of group()) {
-    yield { key, value };
+  for (let kv of group()) {
+    let groupItem =  { key: kv[0], value: kv[1] };
+    groupItem = typeof resultTransform === 'function' ? resultTransform(groupItem) : groupItem;
+    yield groupItem;
   }
 }
+
+/**
+ * Correlates the elements of two sequences based on equality of keys and groups the results. The default equality comparer is used to compare keys.
+ * 
+ * @param inner The sequence to join to the first sequence.
+ * @param outerKeySelector A function to extract the join key from each element of the first sequence.
+ * @param innerKeySelector A function to extract the join key from each element of the second sequence.
+ * @param resultSelector A function to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.
+ * @return A sequence that contains elements of type result that are obtained by performing a grouped join on two sequences.
+ * outerKeySelector: (outerItem) -> key
+ * innerKeySelector: (innerItem) -> key
+ * resultSelector: (outerItem, [groupedInnerItem]) -> result
+ */
+function* groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
+  
+  let group = (iterable, keySelector) => {
+    let map = new Map();
+    
+    for (let item of iterable) {
+      let key = keySelector(item);
+      let list = map.get(key);
+      if (list) {
+        list.push(item);
+      } else {
+        map.set(key, [item]);
+      }
+    }
+    
+    return map;
+  }
+  
+  for (let outerGroupItem of group(this, outerKeySelector)) {
+    let outerKey = outerGroupItem[0];
+    let outerItems = outerGroupItem[1];
+    
+    let innerGroups = group(inner, innerKeySelector);
+    let innerItems = innerGroups.get(outerKey);
+    
+    if (!innerItems) continue;
+    
+    for (let outerItem of outerItems) {
+      let result = resultSelector(outerItem, innerItems);
+      yield result;
+    }
+  }
+}
+
 
 /**
  * Projects each element of a sequence into a new form.
@@ -340,7 +393,7 @@ module.exports = function(options) {
   
   let linqOperators = [aggregate, all, any, average, concatenate, contains, 
     count, defaultIfEmpty, distinct, elementAt, except,
-    first, 
+    first, groupBy, groupJoin,
     where, select, toArray, toList];
   
   let linqChain = {};
