@@ -576,7 +576,7 @@ function* selectMany(selector) {
   }
 }
 
-var selectMany_deep = function* (selector, deep) {
+function* selectMany_deep(selector, deep) {
   selector = typeof selector === 'function' ? selector : util.defaultSelector;
   deep = typeof deep === 'boolean' ? deep : false;
   
@@ -607,6 +607,30 @@ var selectMany_deep = function* (selector, deep) {
     
     i++;
   }
+}
+
+/**
+ * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
+ * 
+ * @param otherSequence A sequence to compare to the first sequence.
+ * @return true if the two source sequences are of equal length and their corresponding elements are equal according to the equality comparer for their type; otherwise, false.
+ */
+function sequenceEqual(otherSequence, equalityComparer) {
+  equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
+  let selfIterator = this[Symbol.iterator]();
+  let otherIterator = otherSequence[Symbol.iterator]();
+  
+  let selfItem;
+  let otherItem;
+  
+  do {  
+    selfItem = selfIterator.next();
+    otherItem = otherIterator.next();
+    
+    if (!equalityComparer(selfItem.value, otherItem.value)) return false;  
+  }while(!selfItem.done);
+  
+  return selfItem.done === otherItem.done;
 }
 
 /**
@@ -665,7 +689,7 @@ module.exports = function(options) {
     aggregate, all, any, average, contains, 
     count, elementAt, each,
     first, 
-    last, max, min, sum, 
+    last, max, min, sum, sequenceEqual,
     toArray, toList].concat(iterableOperators);
   
   let linqChain = {};
