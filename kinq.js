@@ -400,23 +400,28 @@ function last(predicate, defaultValue) {
 /**
  * Returns the maximum value in a sequence.
  * 
- * @param transform A transform function to apply to each element.
+ * @param selector A transform function to apply to each element.
+ * @param comparer A comparer function to check with item is greater.
  * @return The maximum value in the sequence.
+ * selector: (T) -> value
+ * comparer: (item1, item2) -> -1|0|1
  */
-function max(transform) {
+function max(selector, comparer) {
+  comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
+  
   let seq;
   let maximum;
   
-  if (typeof transform === 'function') {
-    seq = this.select(transform);
-    maximum = transform(linq(seq).first());
+  if (typeof selector === 'function') {
+    seq = this.select(selector);
+    maximum = selector(linq(seq).first()); // The first element should pick from self
   } else {
     seq = this;
     maximum = linq(seq).first();
   }
   
   for (let item of seq) {
-    maximum = item > maximum ? item : maximum;
+    maximum = comparer(item, maximum) > 0 ? item : maximum;
   }
   
   return maximum;
@@ -425,26 +430,55 @@ function max(transform) {
 /**
  * Returns the minimum value in a sequence.
  * 
- * @param transform A transform function to apply to each element.
+ * @param selector A transform function to apply to each element.
+ * @comparer A comparer function to check with item is less.
  * @return The minimum value in the sequence.
  */
-function min(transform) {
+function min(selector, comparer) {
+  comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
+  
   let seq;
   let minimum;
   
-  if (typeof transform === 'function') {
-    seq = this.select(transform);
-    minimum = transform(linq(seq).first());
+  if (typeof selector === 'function') {
+    seq = this.select(selector);
+    minimum = selector(linq(seq).first());
   } else {
     seq = this;
     minimum = linq(seq).first();
   }
   
   for (let item of seq) {
-    minimum = item < minimum ? item : minimum;
+    minimum = comparer(item, minimum) < 0 ? item : minimum;
   }
   
   return minimum;
+}
+
+/**
+ * Filters the elements of an sequence based on a specified type.
+ * 
+ * @param type A string to specify which type to return.
+ * @return Filtered the elements of the sequence on.
+ */
+function* ofType(type) {
+  // let builtinTypes = ['number', 'string', 'object', 'boolean', 'undefined', 'symbol'];
+  if (typeof type === 'string') type = type.toLowerCase();
+  
+  let check = (instance) => {
+    if (instance === null || instance === undefined) return false;
+    let primitiveType = typeof instance;
+    
+    if (primitiveType === 'object' && typeof type === 'function') {
+      return instance instanceof type;
+    }
+    
+    return primitiveType === type;
+  };
+  
+  for (let item of this.where(i => check(i)))  {
+    yield item;
+  }
 }
 
 /**
@@ -512,7 +546,7 @@ module.exports = function(options) {
   let linqOperators = [aggregate, all, any, average, concatenate, contains, 
     count, defaultIfEmpty, distinct, elementAt, except,
     first, groupBy, groupJoin, intersect, joinWith,
-    last, max, min, sum, 
+    last, max, min, sum, ofType,
     where, select, toArray, toList];
   
   let linqChain = {};

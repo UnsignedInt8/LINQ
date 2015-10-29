@@ -24,4 +24,8 @@ describe('test max operator', () => {
     assert.equal(a, -Infinity);
   });
   
+  it('should be "z"', () => {
+    let z = Array.from('abcdefgz').max();
+    assert.equal(z, 'z');
+  });
 });

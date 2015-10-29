@@ -4,9 +4,13 @@ const defaultEqualityComparer = function (item1, item2) {
   return item1 === item2;
 };
 
+const defaultComparer = function(item1, item2) {
+  return item1 > item2 ? 1 : (item1 === item2 ? 0 : -1);
+}
+
 const defaultPredicate = function(item) {
   return true;
-}
+};
 
 class ComparableSet extends Set {
   
@@ -25,8 +29,8 @@ class ComparableSet extends Set {
   
   add(item) {
     if (this.has(item)) return;
-    super.add(item);
+    return super.add(item);
   }
 }
 
-module.exports = { defaultEqualityComparer, defaultPredicate, ComparableSet };
+module.exports = { defaultComparer, defaultEqualityComparer, defaultPredicate, ComparableSet };
