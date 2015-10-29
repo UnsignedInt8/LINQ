@@ -400,21 +400,21 @@ function last(predicate, defaultValue) {
 /**
  * Returns the maximum value in a sequence.
  * 
- * @param selector A transform function to apply to each element.
+ * @param keySelector A transform function to apply to each element.
  * @param comparer A comparer function to check with item is greater.
  * @return The maximum value in the sequence.
- * selector: (T) -> value
+ * keySelector: (T) -> key
  * comparer: (item1, item2) -> -1|0|1
  */
-function max(selector, comparer) {
+function max(keySelector, comparer) {
   comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
   
   let seq;
   let maximum;
   
-  if (typeof selector === 'function') {
-    seq = this.select(selector);
-    maximum = selector(linq(seq).first()); // The first element should pick from self
+  if (typeof keySelector === 'function') {
+    seq = this.select(keySelector);
+    maximum = keySelector(linq(seq).first()); // The first element should pick from self
   } else {
     seq = this;
     maximum = linq(seq).first();
@@ -430,19 +430,19 @@ function max(selector, comparer) {
 /**
  * Returns the minimum value in a sequence.
  * 
- * @param selector A transform function to apply to each element.
- * @comparer A comparer function to check with item is less.
+ * @param keySelector A transform function to apply to each element.
+ * @param comparer A comparer function to check with item is less.
  * @return The minimum value in the sequence.
  */
-function min(selector, comparer) {
+function min(keySelector, comparer) {
   comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
   
   let seq;
   let minimum;
   
-  if (typeof selector === 'function') {
-    seq = this.select(selector);
-    minimum = selector(linq(seq).first());
+  if (typeof keySelector === 'function') {
+    seq = this.select(keySelector);
+    minimum = keySelector(linq(seq).first());
   } else {
     seq = this;
     minimum = linq(seq).first();
@@ -478,6 +478,47 @@ function* ofType(type) {
   
   for (let item of this.where(i => check(i)))  {
     yield item;
+  }
+}
+
+let sort = (list, keySelector, comparer) => {
+  comparer = typeof comparer === 'function' ? comparer : util.defaultComparer; 
+  let sortedList = list.sort((i1, i2) => comparer(keySelector ? keySelector(i1) : i1, keySelector ? keySelector(i2) : i2));;
+  
+  return sortedList;
+};
+
+/**
+ * Sorts the elements of a sequence in ascending order by using a specified comparer.
+ * 
+ * @param keySelector A function to extract a key from an element.
+ * @param comparer An comparer to compare keys.
+ * @return A sequence whose elements are sorted according to a key.
+ */
+function* orderBy(keySelector, comparer) {
+  for (let item of sort(this.toList(), keySelector, comparer)) {
+    yield item;
+  }
+}
+
+/**
+ * Sorts the elements of a sequence in descending order by using a specified comparer.
+ * 
+ * @param keySelector A function to extract a key from an element.
+ * @param comparer An comparer to compare keys.
+ * @return A sequence whose elements are sorted in descending order according to a key.
+ */
+function* orderByDescending(keySelector, comparer) {
+  for (let item of sort(this.toList(), keySelector, comparer).reversed()) {
+    yield item;
+  }
+}
+
+function* reversed() {
+  let list = this.toList();
+  
+  for (let i = list.length - 1; i >= 0; i--) {
+    yield list[i];
   }
 }
 
@@ -546,7 +587,8 @@ module.exports = function(options) {
   let linqOperators = [aggregate, all, any, average, concatenate, contains, 
     count, defaultIfEmpty, distinct, elementAt, except,
     first, groupBy, groupJoin, intersect, joinWith,
-    last, max, min, sum, ofType,
+    last, max, min, sum, ofType, orderBy, orderByDescending, 
+    reversed,
     where, select, toArray, toList];
   
   let linqChain = {};
