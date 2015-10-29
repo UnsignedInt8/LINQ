@@ -32,4 +32,10 @@ describe('test ofType operator', () => {
     let mys = arr.ofType(MyType).toArray();
     assert(mys.length > 0 && mys[0] === myObj);
   });
+  
+  let arrayList = [[128], [], [], 3, 'x'];
+  it('should be array list', () => {
+    let x = arrayList.ofType(Array).toArray();
+    assert(x.length === 3 && x[0][0] === 128);
+  });
 });

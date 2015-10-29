@@ -12,6 +12,10 @@ const defaultPredicate = function(item) {
   return true;
 };
 
+const defaultSelector = function(item) {
+  return item;
+}
+
 class ComparableSet extends Set {
   
   constructor(equalityComparer) {
@@ -33,4 +37,4 @@ class ComparableSet extends Set {
   }
 }
 
-module.exports = { defaultComparer, defaultEqualityComparer, defaultPredicate, ComparableSet };
+module.exports = { defaultComparer, defaultEqualityComparer, defaultPredicate, defaultSelector, ComparableSet };

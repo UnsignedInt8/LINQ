@@ -180,6 +180,17 @@ function* distinct(equalityComparer) {
 }
 
 /**
+ * Alias of forEach
+ */
+function each(callback) {
+  let i = 0;
+  
+  for (let item of this) {
+    callback(item, i++);
+  }
+}
+
+/**
  * Returns the element at a specified index in a sequence.
  * 
  * @param positon The zero-base index of element which you want.
@@ -244,6 +255,16 @@ function first(predicate, defaultValue) {
   }
   
   return defaultValue;
+}
+
+/**
+ * 
+ */
+function* flatten(deep) {
+  deep = typeof deep === 'boolean' ? deep : true;
+  for (let item of selectMany_deep.apply(this, [i => i, deep])) {
+    yield item;
+  }
 }
 
 /**
@@ -514,6 +535,11 @@ function* orderByDescending(keySelector, comparer) {
   }
 }
 
+/**
+ * Inverts the order of the elements in a sequence.
+ * 
+ * @return A sequence whose elements correspond to those of the input sequence in reverse order.
+ */
 function* reversed() {
   let list = this.toList();
   
@@ -534,6 +560,51 @@ function* select(transform) {
   
   for (let item of this) {
     yield transform(item, i);
+    i++;
+  }
+}
+
+/**
+ * Projects each element of a sequence to an IEnumerable<T>, flattens the resulting sequences into one sequence, and invokes a result selector function on each element therein. The index of each source element is used in the intermediate projected form of that element.
+ * 
+ * @param selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+ * selector: (item, index) -> value
+ */
+function* selectMany(selector) {
+  for (let item of selectMany_deep.apply(this, [selector, false])) {
+    yield item;
+  }
+}
+
+var selectMany_deep = function* (selector, deep) {
+  selector = typeof selector === 'function' ? selector : util.defaultSelector;
+  deep = typeof deep === 'boolean' ? deep : false;
+  
+  let makeSimple = function* (item) {
+    let iterator = item[Symbol.iterator];
+    if (!iterator) {
+      return yield item;
+    }
+    
+    for (let x of item) {
+      if (deep) {
+        for (let d of makeSimple(x)) {
+          yield d;
+        }
+      } else { 
+        yield x;
+      }
+    } 
+  }
+  
+  let i = 0;
+  
+  for (let item of this) {
+    let result = selector(item, i);
+    for (let sub of makeSimple(result)) {
+      yield sub;
+    }
+    
     i++;
   }
 }
@@ -574,22 +645,28 @@ function* where(predicate) {
 }
 
 function toArray() {
-  return Array.from(this);
+  return this instanceof Array ? this : Array.from(this);
 }
 
 function toList() {
-  return Array.from(this);
+  return toArray.apply(this);
 }
 
 module.exports = function(options) {
   options = options || { safeMode: false };
   
-  let linqOperators = [aggregate, all, any, average, concatenate, contains, 
-    count, defaultIfEmpty, distinct, elementAt, except,
-    first, groupBy, groupJoin, intersect, joinWith,
-    last, max, min, sum, ofType, orderBy, orderByDescending, 
-    reversed,
-    where, select, toArray, toList];
+  let iterableOperators = [
+    concatenate, defaultIfEmpty, distinct, except, 
+    flatten, groupBy, groupJoin, intersect, 
+    joinWith, ofType, orderBy, orderByDescending, 
+    reversed, select, selectMany, where, ];
+    
+  let linqOperators = [
+    aggregate, all, any, average, contains, 
+    count, elementAt, each,
+    first, 
+    last, max, min, sum, 
+    toArray, toList].concat(iterableOperators);
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
