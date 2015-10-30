@@ -254,7 +254,8 @@ function first(predicate, defaultValue) {
     if (predicate(item)) return item;
   }
   
-  return defaultValue;
+  if (typeof defaultValue !== 'undefined') return defaultValue;
+  throw new Error('More than one element satisfies the condition in predicate.');
 }
 
 /**

@@ -12,5 +12,5 @@ describe('test count operator', () => {
   it('should be 0', () => {
     let c = [null, '', 1, [], true].count(i => false);
     assert.equal(c, 0);
-  })
+  });
 });
