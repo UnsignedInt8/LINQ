@@ -14,4 +14,12 @@ describe('test sequenceEqual operator', () => {
   it('should not be equal', () => {
     assert(a1.sequenceEqual(['1', '2', '3', 4]) === false);
   });
+  
+  it('should not be equal', () => {
+    assert(a1.sequenceEqual([]) === false);
+  });
+  
+  it('should not be equal', () => {
+    assert(a1.sequenceEqual(1) === false);
+  });
 });

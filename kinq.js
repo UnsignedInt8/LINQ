@@ -617,13 +617,15 @@ function* selectMany_deep(selector, deep) {
  */
 function sequenceEqual(otherSequence, equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
-  let selfIterator = this[Symbol.iterator]();
-  let otherIterator = otherSequence[Symbol.iterator]();
+  let selfIterator = this[Symbol.iterator] ? this[Symbol.iterator]() : undefined;
+  let otherIterator = otherSequence[Symbol.iterator] ? otherSequence[Symbol.iterator]() : undefined;
+  
+  if (linq([selfIterator, otherIterator]).any(i => i === undefined)) return false;
   
   let selfItem;
   let otherItem;
   
-  do {  
+  do {
     selfItem = selfIterator.next();
     otherItem = otherIterator.next();
     
@@ -631,6 +633,38 @@ function sequenceEqual(otherSequence, equalityComparer) {
   }while(!selfItem.done);
   
   return selfItem.done === otherItem.done;
+}
+
+/**
+ * Returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists; this method throws an exception if more than one element satisfies the condition or sequence is empty.
+ * 
+ * @param predicate A function to test an element for a condition.
+ * @param defaultValue The default value if no such element exists.
+ * @return The single element of the input sequence that satisfies a condition.
+ */
+function single(predicate, defaultValue) {
+  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
+  
+  let count = 0;
+  let singleItem = undefined;
+  for (let item of this) {
+    if (predicate(item)) {
+      if (singleItem === undefined) {
+        singleItem = item;
+      } else {
+        throw new Error('More than one element satisfies the condition in predicate.');
+      }
+    }
+    
+    count++;
+  }
+  
+  if (singleItem === undefined && defaultValue !== undefined) return defaultValue;
+  
+  if (count === 0) throw new Error('The source sequence is empty.');
+  if (!singleItem) throw new Error('No element satisfies the condition in predicate.');
+  
+  return singleItem;
 }
 
 /**
@@ -689,7 +723,7 @@ module.exports = function(options) {
     aggregate, all, any, average, contains, 
     count, elementAt, each,
     first, 
-    last, max, min, sum, sequenceEqual,
+    last, max, min, sum, sequenceEqual, single,
     toArray, toList].concat(iterableOperators);
   
   let linqChain = {};
