@@ -864,6 +864,32 @@ function* where(predicate) {
   }
 }
 
+/**
+ * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+ * 
+ * @param otherSequence The second sequence to merge.
+ * @param resultSelector A function that specifies how to merge the elements from the two sequences.
+ * @return A sequence that contains merged elements of two input sequences.
+ * resultSelector: (item, otherItem) -> result
+ */
+function* zip(otherSequence, resultSelector) {
+  resultSelector = typeof resultSelector === 'function' ? resultSelector : (i1, i2) => [i1, i2];
+  
+  let selfIterator = this[Symbol.iterator]();
+  let otherIterator = otherSequence[Symbol.iterator]();
+  
+  let selfItem = selfIterator.next();
+  let otherItem = otherIterator.next();
+  
+  while (!selfItem.done) {
+    if (selfItem.value === undefined || otherItem.value === undefined) break;
+    yield resultSelector(selfItem.value, otherItem.value);
+    
+    selfItem = selfIterator.next();
+    otherItem = otherIterator.next();
+  }
+}
+
 module.exports = function(options) {
   options = options || { safeMode: false };
   
@@ -873,7 +899,7 @@ module.exports = function(options) {
     joinWith, ofType, orderBy, orderByDescending, 
     reversed, select, selectMany, skip, skipWhile, 
     take, takeWhile, thenBy, thenByDescending, where,
-    union, ];
+    union, zip];
     
   let linqOperators = [
     aggregate, all, any, average, contains, 
