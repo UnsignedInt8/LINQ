@@ -14,4 +14,9 @@ describe('test sum operator', () => {
     assert(a === 3);
   });
   
+  it('should < 0', () => {
+    let a = [-Infinity, -Infinity].sum();
+    assert(a < 0);
+  });
+  
 })

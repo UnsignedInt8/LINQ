@@ -586,6 +586,19 @@ function* selectMany_deep(selector, deep) {
       return yield item;
     }
     
+    if (deep && linq(item[Symbol.iterator]()).count() === 1) {
+      let only = linq(item).single();
+      if (only === item) {
+        return yield only;
+      }
+      
+      for (let i of makeSimple(only)) {
+        yield i;
+      }
+      
+      return;
+    }
+            
     for (let x of item) {
       if (deep) {
         for (let d of makeSimple(x)) {
@@ -600,12 +613,10 @@ function* selectMany_deep(selector, deep) {
   let i = 0;
   
   for (let item of this) {
-    let result = selector(item, i);
+    let result = selector(item, i++);
     for (let sub of makeSimple(result)) {
       yield sub;
     }
-    
-    i++;
   }
 }
 
@@ -668,8 +679,42 @@ function single(predicate, defaultValue) {
 }
 
 /**
+ * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
+ * 
+ * @param count The number of elements to skip before returning the remaining elements.
+ * @return A sequence that contains the elements that occur after the specified index in the input sequence.
+ */
+function* skip(count) {
+  let skipped = 0;
+  
+  for (let item of this) {
+    if (skipped++ < count) continue; 
+    yield item;
+  }
+}
+
+/**
+ * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements. The element's index is used in the logic of the predicate function.
+ * 
+ * @param predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
+ * @return A sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
+ */
+function* skipWhile(predicate) {
+  let satisfied = false;
+  let index = 0;
+  
+  for (let item of this) {
+    if (!satisfied && predicate(item, index++)) continue;
+    
+    satisfied = true;
+    yield item;
+  }
+}
+
+/**
  * Computes the sum of a sequence.
  * 
+ * @param transform The transform function called per interaction.
  * @return The sum of the values in the sequence.
  */
 function sum(transform) {
@@ -681,6 +726,21 @@ function sum(transform) {
   }
   
   return sum;
+}
+
+/**
+ * Returns a specified number of contiguous elements from the start of a sequence.
+ * 
+ * @param count The number of elements to return.
+ * @return A sequence that contains the specified number of elements from the start of the input sequence.
+ */
+function* take(count) {
+  let taken = 0;
+  
+  for (let item of this) {
+    if (taken++ >= count) break;
+    yield item;
+  }
 }
 
 /**
@@ -717,7 +777,8 @@ module.exports = function(options) {
     concatenate, defaultIfEmpty, distinct, except, 
     flatten, groupBy, groupJoin, intersect, 
     joinWith, ofType, orderBy, orderByDescending, 
-    reversed, select, selectMany, where, ];
+    reversed, select, selectMany, skip, skipWhile, 
+    take, where, ];
     
   let linqOperators = [
     aggregate, all, any, average, contains, 

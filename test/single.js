@@ -8,7 +8,6 @@ describe('test single operator', () => {
   
   it ('should be single value', () => {
     let s = arr.single(i => i === 2);
-    console.log(s);
     assert(s === 2);
   });
   

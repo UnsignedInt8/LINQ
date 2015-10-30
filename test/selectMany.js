@@ -34,4 +34,9 @@ describe('test selectMany operator', () => {
     assert.equal(sh.length, 6);
     assert.deepEqual(sh[1], [2, 3, 4]);
   });
+  
+  it('string flatten', () => {
+    let sn = [['abc', 'efg'], 'hijk', ['l', ['n', 'a', ['z'], [[[['m'], 90], []]]]], 2, ['l']].flatten().toArray();
+    assert.equal(sn.length, 18);
+  });
 });
