@@ -781,6 +781,51 @@ function* thenByDescending(keySelector, comparer) {
 }
 
 /**
+ * Creates an array
+ * 
+ * @return An array that contains the elements from the input sequence.
+ */
+function toArray() {
+  return this instanceof Array ? this : Array.from(this);
+}
+
+/**
+ * Alias of toArray
+ */
+function toList() {
+  return toArray.apply(this);
+}
+
+/**
+ * Alias of toMap
+ */
+function toDictionary(keySelector, elementSelector) {
+  return toMap.apply(this, [keySelector, elementSelector]);
+}
+
+/**
+ * Creates a map from a sequenece according to a specified key selector function, a comparer, and an element selector function.
+ * 
+ * @param keySelector A function to extract a key from each element.
+ * @param elementSelector A transform function to produce a result element value from each element.
+ * @return A map that contains values from the input sequence.
+ * keySelector: (item) -> key (Required)
+ * elementSelector: (item) -> value (Optional)
+ */
+function toMap(keySelector, elementSelector) {
+  elementSelector = typeof elementSelector === 'function' ? elementSelector : i => i;
+  let map = new Map();
+  
+  for (let item of this) {
+    let key = keySelector(item);
+    let element = elementSelector(item);
+    map.set(key, element);
+  }
+  
+  return map;
+}
+
+/**
  * Filters a sequence of values based on a predicate.
  * 
  * @param {Function} predicate The filter function called per iteraction.
@@ -799,14 +844,6 @@ function* where(predicate) {
   }
 }
 
-function toArray() {
-  return this instanceof Array ? this : Array.from(this);
-}
-
-function toList() {
-  return toArray.apply(this);
-}
-
 module.exports = function(options) {
   options = options || { safeMode: false };
   
@@ -822,7 +859,7 @@ module.exports = function(options) {
     count, elementAt, each,
     first, 
     last, max, min, sum, sequenceEqual, single,
-    toArray, toList].concat(iterableOperators);
+    toArray, toList, toMap, toDictionary].concat(iterableOperators);
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
