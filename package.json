@@ -23,5 +23,8 @@
   "homepage": "https://github.com/SunshinyNeko/Kinq#readme",
   "devDependencies": {
     "mocha": "^2.3.3"
+  },
+  "engines": {
+    "node": ">=4.0"
   }
 }
