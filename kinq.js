@@ -744,6 +744,25 @@ function* take(count) {
 }
 
 /**
+ * Returns elements from a sequence as long as a specified condition is true. The element's index is used in the logic of the predicate function.
+ * 
+ * @param predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
+ * @return A sequence that contains elements from the input sequence that occur before the element at which the test no longer passes.
+ */
+function* takeWhile(predicate) {
+  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
+  let index = 0;
+  
+  for (let item of this) {
+    if (predicate(item, index++)) {
+      yield item;
+    } else {
+      break;
+    }
+  }
+}
+
+/**
  * Filters a sequence of values based on a predicate.
  * 
  * @param {Function} predicate The filter function called per iteraction.
@@ -778,7 +797,7 @@ module.exports = function(options) {
     flatten, groupBy, groupJoin, intersect, 
     joinWith, ofType, orderBy, orderByDescending, 
     reversed, select, selectMany, skip, skipWhile, 
-    take, where, ];
+    take, takeWhile, where, ];
     
   let linqOperators = [
     aggregate, all, any, average, contains, 
