@@ -48,4 +48,10 @@ describe('test orderBy operator', () => {
     let desc = [1, 2, 4, -Infinity].orderByDescending().toList();
     assert(desc[0] === 4);
   });
+  
+  let orderedNums = [-Infinity, -8, -2, 0, 1, 2, 8];
+  it('then by', () => {
+    let ori = orderedNums.orderBy().thenByDescending().thenBy().toArray();
+    assert.deepEqual(orderedNums, ori);
+  });
 });

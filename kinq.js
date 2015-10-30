@@ -763,6 +763,24 @@ function* takeWhile(predicate) {
 }
 
 /**
+ * Alias of orderBy
+ */
+function* thenBy(keySelector, comparer) {
+  for (let item of orderBy.apply(this, [keySelector, comparer])) {
+    yield item;
+  }  
+}
+
+/**
+ * Alias of orderByDescending
+ */
+function* thenByDescending(keySelector, comparer) {
+  for (let item of orderByDescending.apply(this, [keySelector, comparer])) {
+    yield item;
+  }
+}
+
+/**
  * Filters a sequence of values based on a predicate.
  * 
  * @param {Function} predicate The filter function called per iteraction.
@@ -797,7 +815,7 @@ module.exports = function(options) {
     flatten, groupBy, groupJoin, intersect, 
     joinWith, ofType, orderBy, orderByDescending, 
     reversed, select, selectMany, skip, skipWhile, 
-    take, takeWhile, where, ];
+    take, takeWhile, thenBy, thenByDescending, where, ];
     
   let linqOperators = [
     aggregate, all, any, average, contains, 
