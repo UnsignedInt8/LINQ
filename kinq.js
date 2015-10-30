@@ -358,7 +358,7 @@ function* groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
 function* intersect(otherSequence, equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
   
-  for (let item of this.distinct()) {
+  for (let item of this.distinct(equalityComparer)) {
     for (let otherItem of otherSequence) {
       if (equalityComparer(item, otherItem)) {
         yield item;
@@ -826,6 +826,26 @@ function toMap(keySelector, elementSelector) {
 }
 
 /**
+ * Produces the set union of two sequences by using a specified equalityComparer.
+ * 
+ * @param otherSequence A sequence whose distinct elements form the second set for the union.
+ * @param equalityComparer The equality comparer to compare values.
+ * @return A sequence that contains the elements from both input sequences, no duplicates.
+ */
+function* union(otherSequence, equalityComparer) {
+  
+  let distinctSeq = this.distinct(equalityComparer).toArray();
+  
+  for (let item of distinctSeq) {
+    yield item;
+  }
+  
+  for (let item of linq(otherSequence).distinct(equalityComparer).where(i => !distinctSeq.contains(i, equalityComparer))) {
+    yield item;
+  }
+}
+
+/**
  * Filters a sequence of values based on a predicate.
  * 
  * @param {Function} predicate The filter function called per iteraction.
@@ -852,7 +872,8 @@ module.exports = function(options) {
     flatten, groupBy, groupJoin, intersect, 
     joinWith, ofType, orderBy, orderByDescending, 
     reversed, select, selectMany, skip, skipWhile, 
-    take, takeWhile, thenBy, thenByDescending, where, ];
+    take, takeWhile, thenBy, thenByDescending, where,
+    union, ];
     
   let linqOperators = [
     aggregate, all, any, average, contains, 
