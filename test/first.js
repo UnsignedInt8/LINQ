@@ -10,8 +10,7 @@ describe('test first operator', () => {
   });
   
   it('should be undefined', () => {
-    let u = [].first();
-    assert.equal(u, undefined);
+    assert.throws(() => [].first(), Error);
   });
   
   it('should be first letter', () => {
@@ -25,7 +24,7 @@ describe('test first operator', () => {
   });
   
   it('should be default value', () => {
-    let d = [1, 2, 3].first(i => false, 5);
+    let d = [1, 2, 3].firstOrDefault(i => false, 5);
     assert.equal(d, 5);
   })
 });

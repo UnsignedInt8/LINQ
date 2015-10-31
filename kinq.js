@@ -241,21 +241,36 @@ function* except(otherSequence, equalityComparer) {
 }
 
 /**
- * Returns the first element in a sequence that satisfies a specified condition.
+ * Returns the first element in a sequence that satisfies a specified condition or throw an error if not found.
  * 
  * @param {(Function)} predicate The function called per iteraction till returns true.
  * @param defaultValue The default value.
  * @return The first element which satisfy condition or default value.
  */
-function first(predicate, defaultValue) {
+function first(predicate) {
   predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
   
+  let error = new Error('No element satisfies the condition in predicate.');
+  let firstElement = firstOrDefault.apply(this, [predicate, error]);
+  if (firstElement === error) throw error;
+  
+  return firstElement;
+}
+
+/**
+ * Returns the first element of the sequence that satisfies a condition or a default value if no such element is found.
+ * 
+ * @param {(Function)} predicate The function called per iteraction till returns true.
+ * @param defaultValue The default value.
+ */
+function firstOrDefault(predicate, defaultValue) {
+  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
+
   for (let item of this) {
     if (predicate(item)) return item;
   }
   
-  if (typeof defaultValue !== 'undefined') return defaultValue;
-  throw new Error('More than one element satisfies the condition in predicate.');
+  return defaultValue;
 }
 
 /**
@@ -436,10 +451,10 @@ function max(keySelector, comparer) {
   
   if (typeof keySelector === 'function') {
     seq = this.select(keySelector);
-    maximum = keySelector(linq(seq).first()); // The first element should pick from self
+    maximum = keySelector(linq(seq).firstOrDefault()); // The first element should pick from self
   } else {
     seq = this;
-    maximum = linq(seq).first();
+    maximum = linq(seq).firstOrDefault();
   }
   
   for (let item of seq) {
@@ -464,10 +479,10 @@ function min(keySelector, comparer) {
   
   if (typeof keySelector === 'function') {
     seq = this.select(keySelector);
-    minimum = keySelector(linq(seq).first());
+    minimum = keySelector(seq.firstOrDefault());
   } else {
     seq = this;
-    minimum = linq(seq).first();
+    minimum = linq(seq).firstOrDefault();
   }
   
   for (let item of seq) {
@@ -677,6 +692,11 @@ function single(predicate, defaultValue) {
   if (!singleItem) throw new Error('No element satisfies the condition in predicate.');
   
   return singleItem;
+}
+
+function singleOrDefault(predicate, defaultValue) {
+  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
+  
 }
 
 /**
@@ -905,7 +925,7 @@ module.exports = function(options) {
   let linqOperators = [
     aggregate, all, any, average, contains, 
     count, elementAt, each,
-    first, 
+    first, firstOrDefault,
     last, max, min, sum, sequenceEqual, single,
     toArray, toList, toMap, toDictionary].concat(iterableOperators);
   
