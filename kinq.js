@@ -241,7 +241,7 @@ function* except(otherSequence, equalityComparer) {
 }
 
 /**
- * Returns the first element in a sequence that satisfies a specified condition or throw an error if not found.
+ * Returns the first element in a sequence that satisfies a specified condition or throws an error if not found.
  * 
  * @param {(Function)} predicate The function called per iteraction till returns true.
  * @param defaultValue The default value.
@@ -694,9 +694,11 @@ function single(predicate, defaultValue) {
   return singleItem;
 }
 
+/**
+ * Alias of single
+ */
 function singleOrDefault(predicate, defaultValue) {
-  predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
-  
+  return single.apply(this, [predicate, defaultValue]);  
 }
 
 /**
