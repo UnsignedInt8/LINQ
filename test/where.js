@@ -15,7 +15,7 @@ describe('test where operator', () => {
   });
   
   it('should equal', () => {
-    var x = [1, , 2, 3, 4].linq();
+    var x = [1, , 2, 3, 4];
     let x2 = x.where(i => i > 2).toArray().select(i => i * 2).toList();
     assert.deepEqual(x2, [6, 8]);
   })

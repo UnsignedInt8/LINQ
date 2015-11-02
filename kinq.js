@@ -5,7 +5,7 @@ let util = require('./utilities');
 /**
  * 
  */
-function* linq(iterable) {
+function* toLinqable(iterable) {
   for (let item of iterable) {
     yield item;
   }
@@ -451,10 +451,10 @@ function max(keySelector, comparer) {
   
   if (typeof keySelector === 'function') {
     seq = this.select(keySelector);
-    maximum = keySelector(linq(seq).firstOrDefault()); // The first element should pick from self
+    maximum = keySelector(toLinqable(seq).firstOrDefault()); // The first element should pick from self
   } else {
     seq = this;
-    maximum = linq(seq).firstOrDefault();
+    maximum = toLinqable(seq).firstOrDefault();
   }
   
   for (let item of seq) {
@@ -482,7 +482,7 @@ function min(keySelector, comparer) {
     minimum = keySelector(seq.firstOrDefault());
   } else {
     seq = this;
-    minimum = linq(seq).firstOrDefault();
+    minimum = toLinqable(seq).firstOrDefault();
   }
   
   for (let item of seq) {
@@ -602,8 +602,8 @@ function* selectMany_deep(selector, deep) {
       return yield item;
     }
     
-    if (deep && linq(item[Symbol.iterator]()).count() === 1) {
-      let only = linq(item).single();
+    if (deep && toLinqable(item[Symbol.iterator]()).count() === 1) {
+      let only = toLinqable(item).single();
       if (only === item) {
         return yield only;
       }
@@ -647,7 +647,7 @@ function sequenceEqual(otherSequence, equalityComparer) {
   let selfIterator = this[Symbol.iterator] ? this[Symbol.iterator]() : undefined;
   let otherIterator = otherSequence[Symbol.iterator] ? otherSequence[Symbol.iterator]() : undefined;
   
-  if (linq([selfIterator, otherIterator]).any(i => i === undefined)) return false;
+  if (toLinqable([selfIterator, otherIterator]).any(i => i === undefined)) return false;
   
   let selfItem;
   let otherItem;
@@ -863,7 +863,7 @@ function* union(otherSequence, equalityComparer) {
     yield item;
   }
   
-  for (let item of linq(otherSequence).distinct(equalityComparer).where(i => !distinctSeq.contains(i, equalityComparer))) {
+  for (let item of toLinqable(otherSequence).distinct(equalityComparer).where(i => !distinctSeq.contains(i, equalityComparer))) {
     yield item;
   }
 }
@@ -913,8 +913,7 @@ function* zip(otherSequence, resultSelector) {
   }
 }
 
-module.exports = function(options) {
-  options = options || { safeMode: false };
+let KINQ = function(options) {
   
   let iterableOperators = [
     concatenate, defaultIfEmpty, distinct, except, 
@@ -924,20 +923,27 @@ module.exports = function(options) {
     take, takeWhile, thenBy, thenByDescending, where,
     union, zip];
     
-  let linqOperators = [
+  let execOperators = [
     aggregate, all, any, average, contains, 
     count, elementAt, each,
     first, firstOrDefault,
     last, max, min, sum, sequenceEqual, single,
-    toArray, toList, toMap, toDictionary].concat(iterableOperators);
+    toArray, toList, toMap, toDictionary];
+    
+  let linqOperators = execOperators.concat(iterableOperators);
   
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
+  iterableOperators.forEach((func) => Object.assign(func.prototype, linqChain));
   
-  Object.assign(linq.prototype, linqChain);
-  linqOperators.forEach((func) => Object.assign(func.prototype, linqChain));
+  let linq = {};
+  linqOperators.forEach((item) => linq[item.name] = item);
   
-  Array.prototype.linq = function() { return linq(this); };
-  Object.assign(Array.prototype, linqChain);
+  Object.assign(toLinqable.prototype, linq);
+  Object.assign(Array.prototype, linq);
   
 }
+
+KINQ.toLinqable = toLinqable;
+
+module.exports = KINQ;
