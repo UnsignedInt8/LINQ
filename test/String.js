@@ -85,4 +85,12 @@ describe('test String linqable', () => {
   it('union', () => {
     assert.deepEqual(s.union('J').toArray(), Array.from(s.distinct().concatenate('J')));
   });
+  
+  it('sequenceEqual', () => {
+    assert(s.union('J').sequenceEqual(s.distinct().concatenate('J')));
+  });
+  
+  it('where', () => {
+    assert(ss.where(i => i > 's').count() === 0);
+  });
 });
