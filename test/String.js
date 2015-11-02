@@ -67,5 +67,22 @@ describe('test String linqable', () => {
   it('single', () => {
     assert.strictEqual(s.single(i => i === '0'), '0');
     assert.throws(() => s.single(i => i == 'l'), Error);
-  })
+  });
+  
+  it('skip', () => {
+    assert.strictEqual(s.skip(5).count(), s.length - 5);
+  });
+  
+  it('select', () => {
+    assert.deepEqual(s.select(c => c.toUpperCase()).toArray(), Array.from(s.toUpperCase()));
+    assert.equal(s.select(c => c.toUpperCase()).toArray().toString().replace(/,/g, ''), s.replace(',', '').toUpperCase());
+  });
+  
+  it('intersect', () => {
+    assert.deepEqual(s.intersect(s).toArray(), Array.from('Helo wrd,hLINQ!0'));
+  });
+  
+  it('union', () => {
+    assert.deepEqual(s.union('J').toArray(), Array.from(s.distinct().concatenate('J')));
+  });
 });
