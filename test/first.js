@@ -26,5 +26,5 @@ describe('test first operator', () => {
   it('should be default value', () => {
     let d = [1, 2, 3].firstOrDefault(i => false, 5);
     assert.equal(d, 5);
-  })
+  });
 });

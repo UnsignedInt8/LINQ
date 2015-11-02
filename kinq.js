@@ -3,7 +3,10 @@
 let util = require('./utilities');
 
 /**
+ * Convert iterable object to linqable
  * 
+ * @param An object which implemented iterable interface.
+ * @return A linqable object.
  */
 function* toLinqable(iterable) {
   for (let item of iterable) {
@@ -939,8 +942,10 @@ let KINQ = function(options) {
   let linq = {};
   linqOperators.forEach((item) => linq[item.name] = item);
   
-  Object.assign(toLinqable.prototype, linq);
-  Object.assign(Array.prototype, linq);
+  let iterableObjects = [toLinqable.prototype, Array.prototype, Map.prototype, Set.prototype, WeakMap.prototype, WeakSet.prototype, String.prototype];
+  iterableObjects.forEach(item => Object.assign(item, linq));
+  // Object.assign(toLinqable.prototype, linq);
+  // Object.assign(Array.prototype, linq);
   
 }
 
