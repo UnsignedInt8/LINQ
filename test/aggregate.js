@@ -15,7 +15,7 @@ describe('test aggregate(reduce) operator', () => {
     let str = 'the quick brown fox jumps over the lazy dog';
     let words = str.split(' ');
     let reversed = words.aggregate('', (cur, next) => next + ' ' + cur, (r) => r.toUpperCase());
-    assert.equal(reversed, 'DOG LAZY THE OVER JUMPS FOX BROWN QUICK ');
+    assert.equal(reversed, 'DOG LAZY THE OVER JUMPS FOX BROWN QUICK THE ');
   });
   
   it('just has 1 element', () => {

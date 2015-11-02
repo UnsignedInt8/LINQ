@@ -37,7 +37,7 @@ function aggregate_seed_transform_selector(seed, transform, resultTransform) {
   let it = this[Symbol.iterator]();
   let current = it.next();
   if (current.done) return current.value;
-  let result = typeof seed === 'undefined' ? current.value : seed;
+  let result = typeof seed === 'undefined' ? current.value : transform(seed, current.value);
   
   let next = it.next();
   while(!next.done) {
@@ -944,8 +944,6 @@ let KINQ = function(options) {
   
   let iterableObjects = [toLinqable.prototype, Array.prototype, Map.prototype, Set.prototype, WeakMap.prototype, WeakSet.prototype, String.prototype];
   iterableObjects.forEach(item => Object.assign(item, linq));
-  // Object.assign(toLinqable.prototype, linq);
-  // Object.assign(Array.prototype, linq);
   
 }
 
