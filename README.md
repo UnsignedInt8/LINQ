@@ -16,7 +16,7 @@ Now, LINQ is also available on Node.js(>=4.0) which named **KINQ**!
 KINQ Operators
 --------------
 
- - Deferred Execution Operators
+ - Linqable Operators
 
 Operator | Description
 ---- | ---------
@@ -72,7 +72,7 @@ toMap|Creates a Map from an sequence according to a specified key selector funct
 How to use?
 -----------
 
-There are **deferred execution operators** and **immediate evaluation operators** in KINQ. Deferred execution operators are not going to evaluate the result what you need till meets an immediate evaluation operator. So, it's also called **lazy evaluation**.
+There are **linqable operators** and **immediate evaluation operators** in KINQ. Linqable operators are not going to evaluate the result what you wish till meets an immediate evaluation operator. So, it's also called **lazy evaluation**. Linqable operators can be chained, so you can combine multi-operators to execute complex query.
 
 All code below written by ES6.
 
@@ -90,9 +90,8 @@ const KINQ = require('kinq');
 // To enable KINQ, call it as function. KINQ is going to make Array, Map, Set, Buffer, String...... linqable.
 KINQ();
 
-// To transform an iterable object to linqable.
+// By using toLinqable function to transform an iterable object to linqable.
 KINQ.toLinqable(iterableObj);
-
 ```
 
 **aggregate**
@@ -493,4 +492,284 @@ Returns the minimum value in a sequence.
 let a = [-Infinity, 0].min();
 // a => -Infinity
 ```
+**ofType**
 
+Filters the elements of an sequence based on a specified type.
+
+    ofType(type) => _Linqable<T>
+    
+```
+class MyType {
+
+}
+let myObj = new MyType();
+
+let arr = [1, 'a', '1', new function() {}, null, 2, 
+'zbc', Symbol.iterator, undefined, true, false, true,
+myObj, NaN];
+
+let num = arr.ofType('number').toArray();
+// num => [1, 2];
+
+let bools = arr.ofType('boolean').toArray();
+// bools => [true, false, true];
+
+let mys = arr.ofType(MyType).toArray();
+// mys => [myObj]
+
+let arrayList = [[128], [], [], 3, 'x'];
+let x = arrayList.ofType(Array).toArray();
+// x => [[128], [], []]
+```
+
+**orderBy, orderByDescending**
+
+Sorts the elements of a sequence in ascending/descending order
+
+    orderBy() => _Linqable<T>
+    orderBy(keySelector: (item: T) => TKey) => _Linqable<T>
+    orderBy(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => _Linqable<T>
+    orderByDescending() => _Linqable<T>
+    orderByDescending(keySelector: (item: T) => TKey) => _Linqable<T>
+    orderByDescending(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => _Linqable<T>
+    
+```
+let unorderedlist = [1, Infinity, -8, 3, -0, +0, (-Infinity)];
+let ordered = unorderedList.orderBy(i => i).toList();
+// ordered => [-Infinity, -8, -0, +0, 1, 3, Infinity]
+
+let bottomUp = unorderedlist.orderByDescending().toList();
+// bottomUp => [Infinity, 3, 1, +0, -0, -8, -Infinity]
+
+let byLength = ['12', 'abc', ''].orderBy((i) => i.length).toList();
+// byLength => ['', '12', 'abc']
+```
+
+**reversed**
+
+Inverts the order of the elements in a sequence.
+
+    reversed() => _Linqable<T>
+    
+```
+let a = [1, 2, 3].reversed().toList();
+// a => [3, 2, 1]
+```
+
+**select**
+
+Projects each element of a sequence into a new form. It also be called *map* by other languages.
+
+    select(transform: (item: T, index: number) => TResult) => _Linqable<TResult>
+    
+```
+let n = [1, 2, 3, -1, 2, 1].select(i => i * 2).toList();
+// n => 2, 4, 6, -2, 4, 2
+```
+**selectMany**
+
+Projects each element of a sequence to an _Linqable<T> and flattens the resulting sequences into one sequence.
+
+    selectMany(selector: (item: T, index: number) => Iterable<T>) => _Linqable<TResult>
+    
+```
+let multi = [[1, 2, 3], [4, 5 ,6], 7];
+let fl = multi.selectMany(i => i).toArray();
+// fl => [1, 2, 3, 4, 5, 6, 7]
+
+let deep = [[1, [2, 3, 4], 5], [6, 7], 8];
+let fl = deep.selectMany(i => i).toArray();
+// fl => [1, [2, 3, 4], 5, 6, 7, 8]
+
+let sn = [['abc', 'efg'], 'hijk', ['l', ['n', 'a', ['z'], [[[['m'], 90], []]]]], 2, ['l']].flatten().toArray();
+// sn => ['abc', 'efg', 'hijk', 'l', 'n', 'a', 'z', 'm', 90, 2, 'l']
+```
+
+**sequenceEqual**
+
+Determines whether two sequences are equal by comparing the elements by using equality comparer for their type.
+
+    sequenceEqual(otherSeq: Iterable<T>) => boolean
+    sequenceEqual(otherSeq: Iterable<T>, equalityComparer: (item1: T, item2: T) => boolean) => boolean
+
+```
+let a1 = ['1', '2', '3', 4, 5];
+let a2 = ['1', '2', '3', 4, 5];
+
+let b = a1.sequenceEqual(a2);
+// b => true
+
+let b2 = a1.sequenceEqual(['1', '2', '3', 4])
+// b2 => false
+```
+
+**single, singleOrDefault**
+
+Returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists; this method throws an exception if more than one element satisfies the condition or sequence is empty.
+
+    single() => T
+    single(predicate: (item: T) => boolean) => T
+    singleOrDefault(predicate: (item: T) => boolean, defaultValue) => T|defaultValue
+
+```
+let arr = [1, '2', 3, 3, 2, ''];
+let n = arr.single(i => i === 2);
+// n => 2
+
+let m = arr.single(i => i == 2);
+// throws an exception
+
+let dv = arr.singleOrDefault(i => i === 5, 0);
+// dv => 0
+```
+
+**skip**
+
+Bypasses a specified number of elements in a sequence and then returns the remaining elements.
+
+    skip(count: number) => _Linqable<T>
+    
+```
+let a = [1, 2, 3, 4, 5, 6, 7, 8];
+let sk = a.skip(3).toArray();
+// sk => [4, 5, 6, 7, 8]
+
+let sk = a.skip('7').toArray();
+// sk => [8]
+```
+
+**skipWhile**
+
+Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements. The element's index is used in the logic of the predicate function.
+
+    skipWhile(predicate: (item: T) => boolean) => _Linqable<T>
+    
+```
+let n = [5000, 2500, 9000, 8000, 6500, 4000, 1500, 5500];
+let sk = n.skipWhile((i, index) => i > 1000 * index).toArray();
+// sk => [4000, 1500, 5500]
+```
+
+**sum**
+
+Computes the sum of a sequence.
+
+    sum() => number
+    sum(transform: (item: T) => number) => number
+    
+```
+let a = ['1', 1, 1].sum();
+// a => 3
+
+let a = ['1', 1, 1].sum(i => typeof i === 'string' ? 0 : i);
+// a => 2
+```
+
+**take**
+
+Returns a specified number of contiguous elements from the start of a sequence.
+
+    take(count: number) => _Linqable<T>
+
+```
+let arr = [1, 2, 4, 5, 8, ['a', 'b', [[['a', ['a'], [2]]]]], 10, -1];
+let t = arr.take(5).toArray();
+// t => [1, 2, 4, 5, 8]
+
+let ft = arr.skip(5).take(1).flatten().toArray();
+// ft => ['a', 'b', 'a', 'a', 2]
+```
+
+**takeWhile**
+
+Returns elements from a sequence as long as a specified condition is true. The element's index is used in the logic of the predicate function.
+
+    takeWhile(predicate: (item: T) => boolean) => _Linqable<T>
+
+```
+let fruits = ["apple", "passionfruit", "banana", "mango", "orange", "blueberry", "grape", "strawberry"];
+let t = fruits.takeWhile((i, index) => i.length > index).toArray();
+// t => ['apple', 'passionfruit', 'banana', 'mongo', 'orange', 'blueberry']
+```
+
+**thenBy, thenByDescending**
+
+See orderBy, orderByDescending.
+
+**toArray, toList**
+
+Creates an array from iterable sequence.
+
+    toArray() => T[];
+    toList() => T[];
+    
+```
+let a = [1, 2, 3, 4, 5].where(i => i > 3).toArray();
+// a => [4, 5]
+```
+
+**toMap, toDictionary**
+
+Creates a `Map<k, v>` from an `Iterable<T>` according to a specified key selector function.
+
+    toMap(keySelector: (item: T) => TKey) => Map<TKey, T>
+    toMap(keySelector: (item: T) => TKey, elementSelector: (item: T) => TValue) => Map<TKey, TValue>
+    
+```
+let coms = [
+    { Company: "Coho Vineyard", Weight: 25.2, TrackingNumber: 89453312 },
+    { Company: "Lucerne Publishing", Weight: 18.7, TrackingNumber: 89112755 },
+    { Company: "Wingtip Toys", Weight: 6.0, TrackingNumber: 299456122 },
+    { Company: "Adventure Works", Weight: 33.8, TrackingNumber: 4665518773 } ];
+
+let map = coms.toMap(c => c.TrackingNumber, p => p.Company + " " + p.TrackingNumber);
+// map.keys(): [89453312, 89112755, 299456122, 4665518773]
+```
+
+**union**
+
+Produces the set union of two sequences.
+
+    union(otherSeq: Iterable<T>) => _Linqable<T>
+    union(otherSeq: Iterable<T>, equalityComparer: (item1: T, item2: T) => boolean) => _Linqable<T>
+    
+```
+let a1 = [1, 1, 2, 1, 2, 4, 2, 4];
+let a2 = [1, 3, 2, 1, 4, '1', '2'];
+
+let u = a1.union(a2).toArray();
+// u => [1, 2, 4, 3, '1', '2']
+
+let u2 = a1.union(a2, (i1, i2) => i1 == i2).toArray();
+// u2 => [1, 2, 4, 3]
+```
+
+**where**
+
+Filters a sequence of values based on a predicate.
+
+    where(predicate: (item: T, index: number) => boolean) => _Linqable<T>
+
+```
+let numArray = [-10, 20, -5, 5, 8, Number.MAX_VALUE];
+var fa = numArray.where(i => i > 0);
+// fa => [20, 5, 8, Number.MAX_VALUE]
+```
+
+**zip**
+
+Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+
+    zip() => _Linqable<T>
+    zip(second: Iterable<TSecond>, func: (item1: T, item2: TSecond) => TResult) => _Linqable<TResult>
+    
+```
+let a1 = [1, 2, 3, 4];
+let w1 = [ "one", "two", "three" ];
+
+let z = a1.zip(w1, (i1, i2) => `${i1} ${i2}`).toArray();
+// z => ['1 one', '2 two', '3 three']
+
+let zn = a1.zip(w1).toArray();
+// zn => [[1, 'one'], [2, 'two'], [3, 'three']]
+```
