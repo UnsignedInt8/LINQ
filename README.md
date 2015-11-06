@@ -97,13 +97,13 @@ KINQ.toLinqable(iterableObj);
 
 **aggregate**
 
-Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
+Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value. In other languages, it may be called *reduce*.
 
-aggreagte(func: (current: T, next: T) => T) => T
+    aggreagte(func: (current: T, next: T) => T) => T
 
-aggregate(seed: T, func: (seed: T, start: T) => T) => T
+    aggregate(seed: T, func: (seed: T, start: T) => T) => T
 
-aggregate(seed: T, func: (seed: T, start: T) => T, resultSelector: (result: T) => TResult) => TResult
+    aggregate(seed: T, func: (seed: T, start: T) => T, resultSelector: (result: T) => TResult) => TResult
 
 ```
 let a1 = [1].aggregate((cur, next) => cur + next);
@@ -122,9 +122,9 @@ let upperReversed = words.aggregate('', (cur, next) => next + ' ' + cur, (r) => 
 
 **all**
 
-Determines whether all elements of a sequence satisfy a condition.
+Determines whether all elements of a sequence satisfy a condition. In other languages, it may be called *every*.
 
-all((item: T) => boolean) => boolean
+    all((item: T) => boolean) => boolean
 
 ```
 let r = ['1', '2', '2', '4'].all(i => i.length > 0);
@@ -141,20 +141,28 @@ let r = [].all(i => i);
 
 Determines whether a sequence contains any elements. In other languages, it may be called *some*.
 
-any((item: T) => boolean) => boolean
+    any() => boolean
+
+    any((item: T) => boolean) => boolean
 
 ```
 let r = [1, 0, 0, 'x'].any((i) => i === 'x');
 // r => true
+
+let r = [''].any();
+// r => true
+
+let r = [].any();
+// r => false
 ```
 
 **average**
 
 Computes the average of a sequence.
 
-average() => number
+    average() => number
 
-average((item: T) => TResult) => number
+    average((item: T) => TResult) => number
 
 ```
 let num = ['30', 0, 60.0, 20, '40'].average();
@@ -168,4 +176,52 @@ let a = ['x', '', null, undefined, 2, 4].average();
 
 let a = [Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE].average();
 // a => Infinity
+```
+
+**concatenate**
+
+Concatenates two sequences.
+
+    concatenate(otherSequence: Iterable<T>) => _Linqable<T>
+
+```
+let a1 = [1, 2, 3];
+let a2 = ['a', 'b', 'c'];
+    
+let a = a1.concatenate(a2).toArray();
+// a => [1, 2, 3, 'a', 'b', 'c']
+```
+
+**contains**
+
+Determines whether a sequence contains a specified element by using the default/specified equality comparer.
+
+    contains(item: any) => boolean
+    contains(item: any, equalityComparer(item1, item2) => boolean) => boolean
+
+```
+let a = ['', '23', 'xx'].contains('');
+// a => true
+
+let anArray = [1, '2', 3];
+let r = anArray.contains(2, (item1, item2) => item1 == item2);
+// r => true
+
+let r2 = anArray.contains(2);
+// r => false
+```
+
+**count**
+
+Returns the number of elements in a sequence.
+
+    count() => number
+    count((item) => boolean) => number
+
+```
+let c = [1, 1, 1, 1, 1].count();
+// c => 5
+
+let c = [null, '', 1, [], true].count(i => false);
+// c => 0
 ```
