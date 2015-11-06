@@ -98,6 +98,8 @@ KINQ.toLinqable(iterableObj);
 
 Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value. In other languages, it may be called *reduce*.
 
+*Syntax*
+
     aggreagte(func: (current: T, next: T) => T) => T
 
     aggregate(seed: T, func: (seed: T, start: T) => T) => T
@@ -123,6 +125,8 @@ let upperReversed = words.aggregate('', (cur, next) => next + ' ' + cur, (r) => 
 
 Determines whether all elements of a sequence satisfy a condition. In other languages, it may be called *every*.
 
+*Syntax*
+
     all((item: T) => boolean) => boolean
 
 ```
@@ -140,8 +144,9 @@ let r = [].all(i => i);
 
 Determines whether a sequence contains any elements. In other languages, it may be called *some*.
 
-    any() => boolean
+*Syntax*
 
+    any() => boolean
     any((item: T) => boolean) => boolean
 
 ```
@@ -159,8 +164,9 @@ let r = [].any();
 
 Computes the average of a sequence.
 
-    average() => number
+*Syntax*
 
+    average() => number
     average((item: T) => TResult) => number
 
 ```
@@ -181,6 +187,8 @@ let a = [Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE].average();
 
 Concatenates two sequences.
 
+*Syntax*
+
     concatenate(otherSequence: Iterable<T>) => _Linqable<T>
 
 ```
@@ -194,6 +202,8 @@ let a = a1.concatenate(a2).toArray();
 **contains**
 
 Determines whether a sequence contains a specified element by using the default/specified equality comparer.
+
+*Syntax*
 
     contains(item: any) => boolean
     contains(item: any, equalityComparer(item1, item2) => boolean) => boolean
@@ -214,6 +224,8 @@ let r2 = anArray.contains(2);
 
 Returns the number of elements in a sequence.
 
+*Syntax*
+
     count() => number
     count((item) => boolean) => number
 
@@ -228,6 +240,8 @@ let c = [null, '', 1, [], true].count(i => false);
 **defaultIfEmpty**
 
 Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
+
+*Syntax*
 
     defaultIfEmpty() => _Linqable<T>
     defaultIfEmpty(defaultValue) => _Linqable<T>
@@ -248,6 +262,8 @@ let x = [].defaultIfEmpty().toArray();
 
 Returns distinct elements from a sequence by using the default/specified equality comparer to compare values.
 
+*Syntax*
+
     distinct() => _Liqnable<T>
     distinct(eqaulityComparer(item1, item2) => boolean) => _Linqable<T>
     
@@ -264,6 +280,8 @@ let arr = [1, 2, 2, 3, 2, 1, 9, '1', 'x', 'y', 'x', 'a', obj, obj, 'z'].distinct
 
 Invoke closure function for each element.
 
+*Syntax*
+
     each((item: T) => void) => void
 
 ```
@@ -274,6 +292,8 @@ Invoke closure function for each element.
 **elementAt**
 
 Returns the element at a specified zero-based index in a sequence.
+
+*Syntax*
 
     elementAt(index: number) => T
     elementAt(index: number, defaultValue: any) => T|defaultValue
@@ -292,6 +312,8 @@ let n = [].elementAt(-10);
 **except**
 
 Produces the set difference of two sequences by using the equality comparer to compare values.
+
+*Syntax*
 
     except(otherSequence: Iterable<T>) => _Linqable<T>
     except(otherSequence: Iterable<T>, equalityComparer: (item1: T, item2: T)) => _Linqable<T>
@@ -317,6 +339,8 @@ let a = a1.except(a2, (item1, item2) => item1 == item2).toArray()
 
 Returns the first element of a sequence. Throws an except if no element found.
 
+*Syntax*
+
     first() => T
     first((item: T) => boolean) => T
 
@@ -338,6 +362,8 @@ let a = ['1', 2, '3'].first(i => i == 3);
 
 Returns the first element of the sequence that satisfies a condition or a default value if no such element is found.
 
+*Syntax*
+
     firstOrDefault((item: T) => boolean, defaultValue: any) => T
     
 ```
@@ -348,6 +374,8 @@ let d = [1, 2, 3].firstOrDefault(i => false, 5);
 **groupBy**
 
 Groups the elements of a sequence.
+
+*Syntax*
 
     groupBy(keySelector: (item: T) => TKey) => _Linqable<{ key: TKey, value: T[] }>
     groupBy(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult) => _Linqable<{ key: TKey, value: T[] }>
@@ -368,6 +396,8 @@ assert.deepEqual(r[1].value, ['a', 'b', 'c']);
 **groupJoin**
 
 Correlates the elements of two sequences based on equality of keys and groups the results.
+
+*Syntax*
 
     groupJoin(inner: Iterable<TInner>, outerKeySelector: (item: TOuter) => TKey, innerKeySelector: (item: TInner) => TKey, resultSelector: (outer: TOuter, inner: Iterable<TInner>) => TResult) => _Linqable<TResult>
     
@@ -408,6 +438,8 @@ assert.deepEqual(peopleWithPets[2], { owner: charlotte.Name, pets: [whiskers.Nam
 
 Produces the set intersection of two sequences.
 
+*Syntax*
+
     intersect(otherSequence: Iterable<T>) => _Linqable<T>
     intersect(otherSequence: Iterable<T>, equalityComparer(item1: T, item2: T) => boolean) => _Linqable<T>
 
@@ -422,6 +454,8 @@ let inter = a1.intersect(a2).toArray();
 joinWith
 
 Correlates the elements of two sequences based on matching keys. 
+
+*Syntax*
 
     joinWith(inner: Iterable<TInner>, outerKeySelector: (item: TOuter) => TKey, innerKeySelector: (item: TInner) => TKey, resultSelector: (TOuter, TInner) => TResult) => _Linqable<T>
     joinWith(inner: Iterable<TInner>, outerKeySelector: (item: TOuter) => TKey, innerKeySelector: (item: TInner) => TKey, resultSelector: (TOuter, TInner) => TResult, keyEqualityComparer: (key1: TKey, key2: TKey) => boolean) => _Linqable<T>
@@ -452,6 +486,8 @@ let peopleWithPets = people.joinWith(pets, person => person, pet => pet.Owner, (
 
 Returns the last element of a sequence.
 
+*Syntax*
+
     last() => T
     last(predicate: (item: T) => boolean) => T
     last(predicate: (item: T) => boolean, defaultValue: T) => T|defaultValue
@@ -467,6 +503,8 @@ let lastDv = [].last(i => true, 2);
 **max**
 
 Returns the maximum value in a sequence.
+
+*Syntax*
 
     max() => T
     max(keySelector: (item: T) => TKey) => T
@@ -484,6 +522,8 @@ let max = [1, -Infinity, -.2, 2, '5.1'].max(i => Number.parseFloat(i));
 
 Returns the minimum value in a sequence.
 
+*Syntax*
+
     min() => T
     min(keySelector: (item: T) => TKey) => T
     min(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => T
@@ -495,6 +535,8 @@ let a = [-Infinity, 0].min();
 **ofType**
 
 Filters the elements of an sequence based on a specified type.
+
+*Syntax*
 
     ofType(type) => _Linqable<T>
     
@@ -526,6 +568,8 @@ let x = arrayList.ofType(Array).toArray();
 
 Sorts the elements of a sequence in ascending/descending order
 
+*Syntax*
+
     orderBy() => _Linqable<T>
     orderBy(keySelector: (item: T) => TKey) => _Linqable<T>
     orderBy(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => _Linqable<T>
@@ -549,6 +593,8 @@ let byLength = ['12', 'abc', ''].orderBy((i) => i.length).toList();
 
 Inverts the order of the elements in a sequence.
 
+*Syntax*
+
     reversed() => _Linqable<T>
     
 ```
@@ -560,6 +606,8 @@ let a = [1, 2, 3].reversed().toList();
 
 Projects each element of a sequence into a new form. It also be called *map* by other languages.
 
+*Syntax*
+
     select(transform: (item: T, index: number) => TResult) => _Linqable<TResult>
     
 ```
@@ -569,6 +617,8 @@ let n = [1, 2, 3, -1, 2, 1].select(i => i * 2).toList();
 **selectMany**
 
 Projects each element of a sequence to an _Linqable<T> and flattens the resulting sequences into one sequence.
+
+*Syntax*
 
     selectMany(selector: (item: T, index: number) => Iterable<T>) => _Linqable<TResult>
     
@@ -589,6 +639,8 @@ let sn = [['abc', 'efg'], 'hijk', ['l', ['n', 'a', ['z'], [[[['m'], 90], []]]]],
 
 Determines whether two sequences are equal by comparing the elements by using equality comparer for their type.
 
+*Syntax*
+
     sequenceEqual(otherSeq: Iterable<T>) => boolean
     sequenceEqual(otherSeq: Iterable<T>, equalityComparer: (item1: T, item2: T) => boolean) => boolean
 
@@ -606,6 +658,8 @@ let b2 = a1.sequenceEqual(['1', '2', '3', 4])
 **single, singleOrDefault**
 
 Returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists; this method throws an exception if more than one element satisfies the condition or sequence is empty.
+
+*Syntax*
 
     single() => T
     single(predicate: (item: T) => boolean) => T
@@ -627,6 +681,8 @@ let dv = arr.singleOrDefault(i => i === 5, 0);
 
 Bypasses a specified number of elements in a sequence and then returns the remaining elements.
 
+*Syntax*
+
     skip(count: number) => _Linqable<T>
     
 ```
@@ -642,6 +698,8 @@ let sk = a.skip('7').toArray();
 
 Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements. The element's index is used in the logic of the predicate function.
 
+*Syntax*
+
     skipWhile(predicate: (item: T) => boolean) => _Linqable<T>
     
 ```
@@ -653,6 +711,8 @@ let sk = n.skipWhile((i, index) => i > 1000 * index).toArray();
 **sum**
 
 Computes the sum of a sequence.
+
+*Syntax*
 
     sum() => number
     sum(transform: (item: T) => number) => number
@@ -669,6 +729,8 @@ let a = ['1', 1, 1].sum(i => typeof i === 'string' ? 0 : i);
 
 Returns a specified number of contiguous elements from the start of a sequence.
 
+*Syntax*
+
     take(count: number) => _Linqable<T>
 
 ```
@@ -683,6 +745,8 @@ let ft = arr.skip(5).take(1).flatten().toArray();
 **takeWhile**
 
 Returns elements from a sequence as long as a specified condition is true. The element's index is used in the logic of the predicate function.
+
+*Syntax*
 
     takeWhile(predicate: (item: T) => boolean) => _Linqable<T>
 
@@ -700,6 +764,8 @@ See orderBy, orderByDescending.
 
 Creates an array from iterable sequence.
 
+*Syntax*
+
     toArray() => T[];
     toList() => T[];
     
@@ -711,6 +777,8 @@ let a = [1, 2, 3, 4, 5].where(i => i > 3).toArray();
 **toMap, toDictionary**
 
 Creates a `Map<k, v>` from an `Iterable<T>` according to a specified key selector function.
+
+*Syntax*
 
     toMap(keySelector: (item: T) => TKey) => Map<TKey, T>
     toMap(keySelector: (item: T) => TKey, elementSelector: (item: T) => TValue) => Map<TKey, TValue>
@@ -730,6 +798,8 @@ let map = coms.toMap(c => c.TrackingNumber, p => p.Company + " " + p.TrackingNum
 
 Produces the set union of two sequences.
 
+*Syntax*
+
     union(otherSeq: Iterable<T>) => _Linqable<T>
     union(otherSeq: Iterable<T>, equalityComparer: (item1: T, item2: T) => boolean) => _Linqable<T>
     
@@ -748,6 +818,8 @@ let u2 = a1.union(a2, (i1, i2) => i1 == i2).toArray();
 
 Filters a sequence of values based on a predicate.
 
+*Syntax*
+
     where(predicate: (item: T, index: number) => boolean) => _Linqable<T>
 
 ```
@@ -759,6 +831,8 @@ var fa = numArray.where(i => i > 0);
 **zip**
 
 Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+
+*Syntax*
 
     zip() => _Linqable<T>
     zip(second: Iterable<TSecond>, func: (item1: T, item2: TSecond) => TResult) => _Linqable<TResult>
