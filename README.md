@@ -78,12 +78,31 @@ All code below written by ES6.
 
 ----------
 
+**Install KINQ**
+
+```
+npm install kinq --save
+```
+
+```
+const KINQ = require('kinq');
+
+// To enable KINQ, call it as function. KINQ is going to make Array, Map, Set, Buffer, String...... linqable.
+KINQ();
+
+// To transform an iterable object to linqable.
+KINQ.toLinqable(iterableObj);
+
+```
+
 **aggregate**
 
 Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
 
 aggreagte(func: (current: T, next: T) => T) => T
+
 aggregate(seed: T, func: (seed: T, start: T) => T) => T
+
 aggregate(seed: T, func: (seed: T, start: T) => T, resultSelector: (result: T) => TResult) => TResult
 
 ```
@@ -117,4 +136,8 @@ let r = [1, 2, 3, '3', 4, '5'].all(i => Number.isInteger(i));
 let r = [].all(i => i);
 // r => true
 ```
+
+**any**
+
+Determines whether a sequence contains any elements.
 
