@@ -139,5 +139,33 @@ let r = [].all(i => i);
 
 **any**
 
-Determines whether a sequence contains any elements.
+Determines whether a sequence contains any elements. In other languages, it may be called *some*.
 
+any((item: T) => boolean) => boolean
+
+```
+let r = [1, 0, 0, 'x'].any((i) => i === 'x');
+// r => true
+```
+
+**average**
+
+Computes the average of a sequence.
+
+average() => number
+
+average((item: T) => TResult) => number
+
+```
+let num = ['30', 0, 60.0, 20, '40'].average();
+// num => 30
+
+let num = ['30', '0', 60.0, 20, '40'].average(i => typeof i === 'number' ? i : 0);
+// num => 16
+
+let a = ['x', '', null, undefined, 2, 4].average();
+// a => NaN
+
+let a = [Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE].average();
+// a => Infinity
+```
