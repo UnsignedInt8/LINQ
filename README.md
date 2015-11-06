@@ -225,3 +225,145 @@ let c = [1, 1, 1, 1, 1].count();
 let c = [null, '', 1, [], true].count(i => false);
 // c => 0
 ```
+
+**defaultIfEmpty**
+
+Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
+
+    defaultIfEmpty() => _Linqable<T>
+    defaultIfEmpty(defaultValue) => _Linqable<T>
+
+```
+let arr = [1, 2, 3];
+let x = arr.defaultIfEmpty('').toArray();
+// x => [1, 2, 3]
+
+let x = [].defaultIfEmpty('0').toArray();
+// x => ['0']
+
+let x = [].defaultIfEmpty().toArray();
+// x = > [undefined]
+```
+
+**distinct**
+
+Returns distinct elements from a sequence by using the default/specified equality comparer to compare values.
+
+    distinct() => _Liqnable<T>
+    distinct(eqaulityComparer(item1, item2) => boolean) => _Linqable<T>
+    
+```
+let obj = new Object();
+let arr = [1, 2, 2, 3, 2, 1, 9, '1', 'x', 'y', 'x', 'a', obj, obj, 'z'].distinct().toArray();
+// arr => [1, 2, 3, 9, '1', 'x', 'y', 'a', obj, 'z']
+
+let arr = [1, 2, 2, 3, 2, 1, 9, '1', 'x', 'y', 'x', 'a', obj, obj, 'z'].distinct((item1, item2) => item1 == item2).toArray();
+// arr => [1, 2, 3, 9, 'x', 'y', 'a', obj, 'z']
+```
+
+**each**
+
+Invoke closure function for each element.
+
+    each((item: T) => void) => void
+
+```
+[1, 2, 3].each((i) => console.log(i));
+// 1, 2, 3
+```
+
+**elementAt**
+
+Returns the element at a specified zero-based index in a sequence.
+
+    elementAt(index: number) => T
+    elementAt(index: number, defaultValue: any) => T|defaultValue
+
+```
+let el = [0, 0, 0, 1, 'a', 2, 1, '1'].elementAt(6);
+// el => 1
+
+let dv = [].elementAt(10, 'defaultValue');
+// dv => 'defaultValue'
+
+let n = [].elementAt(-10);
+// n => undefined
+```
+
+**except**
+
+Produces the set difference of two sequences by using the equality comparer to compare values.
+
+    except(otherSequence: Iterable<T>) => _Linqable<T>
+    except(otherSequence: Iterable<T>, equalityComparer: (item1: T, item2: T)) => _Linqable<T>
+
+```
+let a1 = [1, 2, 3];
+let a2 = [3, 2, 1, 2, 0];
+let a = a1.except(a2).toArray()
+// a => []
+
+let a1 = ['a', 'b', 1, null];
+let a2 = [null, 1, 'b'];
+let a = a1.except(a2).toArray();
+// a => ['a']    
+
+let a1 = [8, 0, '1', '2'];
+let a2 = [1, 2];
+let a = a1.except(a2, (item1, item2) => item1 == item2).toArray()
+// a => [8, 0]
+```
+
+**first**
+
+Returns the first element of a sequence. Throws an except if no element found.
+
+    first() => T
+    first((item: T) => boolean) => T
+
+```
+let a = [5, 'a'].first();
+// a => 5
+
+let f = [].first()
+// throw an exception
+
+let a = [5, 0, 1, 'a', 'b', 'c', 'a'].first(i => i === 'a');
+// a => 'a'
+
+let a = ['1', 2, '3'].first(i => i == 3);
+// a => '3'
+```
+
+**firstOrDefault**
+
+Returns the first element of the sequence that satisfies a condition or a default value if no such element is found.
+
+    firstOrDefault((item: T) => boolean, defaultValue: any) => T
+    
+```
+let d = [1, 2, 3].firstOrDefault(i => false, 5);
+// d => 5
+```
+
+**groupBy**
+
+Groups the elements of a sequence.
+
+    groupBy(keySelector: (item: T) => TKey) => _Linqable<{ key: TKey, value: T[] }>
+    groupBy(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult) => _Linqable<{ key: TKey, value: T[] }>
+    groupBy(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult, resultSelector: (result: TResult) => TGroup) => { key: TKey, value: TGroup }>
+    
+```
+let r = [1, 2, 3, 'a', 'b', 'c'].groupBy(i => Number.isInteger(i) ? 'Number' : 'Letter').toArray();
+
+assert.equal(r.length, 2);
+assert.strictEqual(r[0].key, 'Number');
+assert.deepEqual(r[0].value, [1, 2, 3]);
+assert.strictEqual(r[1].key, 'Letter');
+assert.deepEqual(r[1].value, ['a', 'b', 'c']);
+
+// r => [{ key: 'Number', value: [1, 2, 3] }, { key: 'Letter', value: ['a', 'b', 'c'] }]
+```
+
+**groupJoin**
