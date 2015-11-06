@@ -921,3 +921,7 @@ let z = a1.zip(w1, (i1, i2) => `${i1} ${i2}`).toArray();
 let zn = a1.zip(w1).toArray();
 // zn => [[1, 'one'], [2, 'two'], [3, 'three']]
 ```
+
+---
+
+License under MIT
