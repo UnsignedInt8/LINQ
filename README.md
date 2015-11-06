@@ -45,7 +45,7 @@ union|Produces the set union of two sequences by using the default equality comp
 where|Filters a sequence of values based on a predicate.
 zip|Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
 
- - Evaluation Operators
+ - Immediate Evaluation Operators
  
 Operator | Description
 ---- | ---------
@@ -70,3 +70,9 @@ toArray|Creates an array from base sequence.
 toList|Alias of toArray.
 toDictionary|Alias of toDictionary.
 toMap|Creates a Map from an sequence according to a specified key selector function.
+
+How to use?
+-----------
+
+There are **deferred execution operators** and **immediate evaluation operators** in KINQ. Deferred execution operators are not going to evaluate the result what you need till there is an immediate evaluation operator. So, it's also called **lazy evaluation**.
+
