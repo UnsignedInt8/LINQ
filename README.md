@@ -77,8 +77,11 @@ There are **deferred execution operators** and **immediate evaluation operators*
 All code below written by ES6.
 
 1. aggregate: Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
+
 aggreagte(func: (current: T, next: T) => T) => T
+
 aggregate(seed: T, func: (seed: T, start: T) => T) => T
+
 aggregate(seed: T, func: (seed: T, start: T) => T, resultSelector: (result: T) => TResult) => TResult
 ```
 let a1 = [1].aggregate((cur, next) => cur + next);
@@ -96,6 +99,7 @@ let upperReversed = words.aggregate('', (cur, next) => next + ' ' + cur, (r) => 
 ```
 
 2. all: Determines whether all elements of a sequence satisfy a condition.
+
 all((item: T) => boolean) => boolean
 ```
 let r = ['1', '2', '2', '4'].all(i => i.length > 0);
