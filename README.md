@@ -1,7 +1,5 @@
 # KINQ
 
----
-
 **KINQ is LINQ for Node.js bases on ES6.**
 
 What's LINQ?
@@ -74,5 +72,38 @@ toMap|Creates a Map from an sequence according to a specified key selector funct
 How to use?
 -----------
 
-There are **deferred execution operators** and **immediate evaluation operators** in KINQ. Deferred execution operators are not going to evaluate the result what you need till there is an immediate evaluation operator. So, it's also called **lazy evaluation**.
+There are **deferred execution operators** and **immediate evaluation operators** in KINQ. Deferred execution operators are not going to evaluate the result what you need till meets an immediate evaluation operator. So, it's also called **lazy evaluation**.
 
+All code below written by ES6.
+
+1. aggregate: Applies an accumulator function over a sequence. The specified seed value is used as the initial accumulator value.
+aggreagte(func: (current: T, next: T) => T) => T
+aggregate(seed: T, func: (seed: T, start: T) => T) => T
+aggregate(seed: T, func: (seed: T, start: T) => T, resultSelector: (result: T) => TResult) => TResult
+```
+let a1 = [1].aggregate((cur, next) => cur + next);
+// a1 => 1
+
+let str = 'the quick brown fox jumps over the lazy dog';
+let words = str.split(' ');
+let reversed = words.aggregate((cur, next) => next + ' ' + cur);
+// reversed => 'dog lazy the over jumps fox brown quick the'
+
+let str = 'the quick brown fox jumps over the lazy dog';
+let words = str.split(' ');
+let upperReversed = words.aggregate('', (cur, next) => next + ' ' + cur, (r) => r.toUpperCase());
+// upperReversed => 'DOG LAZY THE OVER JUMPS FOX BROWN QUICK THE '
+```
+
+2. all: Determines whether all elements of a sequence satisfy a condition.
+all((item: T) => boolean) => boolean
+```
+let r = ['1', '2', '2', '4'].all(i => i.length > 0);
+// r => true
+
+let r = [1, 2, 3, '3', 4, '5'].all(i => Number.isInteger(i));
+// r => false
+
+let r = [].all(i => i);
+// r => true
+```
