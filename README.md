@@ -106,6 +106,8 @@ Applies an accumulator function over a sequence. The specified seed value is use
 
     aggregate(seed: T, func: (seed: T, start: T) => T, resultSelector: (result: T) => TResult) => TResult
 
+*Usage*
+
 ```
 let a1 = [1].aggregate((cur, next) => cur + next);
 // a1 => 1
@@ -129,6 +131,8 @@ Determines whether all elements of a sequence satisfy a condition. In other lang
 
     all((item: T) => boolean) => boolean
 
+*Usage*
+
 ```
 let r = ['1', '2', '2', '4'].all(i => i.length > 0);
 // r => true
@@ -149,6 +153,8 @@ Determines whether a sequence contains any elements. In other languages, it may 
     any() => boolean
     any((item: T) => boolean) => boolean
 
+*Usage*
+
 ```
 let r = [1, 0, 0, 'x'].any((i) => i === 'x');
 // r => true
@@ -168,6 +174,8 @@ Computes the average of a sequence.
 
     average() => number
     average((item: T) => TResult) => number
+
+*Usage*
 
 ```
 let num = ['30', 0, 60.0, 20, '40'].average();
@@ -191,6 +199,8 @@ Concatenates two sequences.
 
     concatenate(otherSequence: Iterable<T>) => _Linqable<T>
 
+*Usage*
+
 ```
 let a1 = [1, 2, 3];
 let a2 = ['a', 'b', 'c'];
@@ -207,6 +217,8 @@ Determines whether a sequence contains a specified element by using the default/
 
     contains(item: any) => boolean
     contains(item: any, equalityComparer(item1, item2) => boolean) => boolean
+
+*Usage*
 
 ```
 let a = ['', '23', 'xx'].contains('');
@@ -229,6 +241,8 @@ Returns the number of elements in a sequence.
     count() => number
     count((item) => boolean) => number
 
+*Usage*
+
 ```
 let c = [1, 1, 1, 1, 1].count();
 // c => 5
@@ -245,6 +259,8 @@ Returns the elements of the specified sequence or the type parameter's default v
 
     defaultIfEmpty() => _Linqable<T>
     defaultIfEmpty(defaultValue) => _Linqable<T>
+
+*Usage*
 
 ```
 let arr = [1, 2, 3];
@@ -266,7 +282,9 @@ Returns distinct elements from a sequence by using the default/specified equalit
 
     distinct() => _Liqnable<T>
     distinct(eqaulityComparer(item1, item2) => boolean) => _Linqable<T>
-    
+
+*Usage*
+
 ```
 let obj = new Object();
 let arr = [1, 2, 2, 3, 2, 1, 9, '1', 'x', 'y', 'x', 'a', obj, obj, 'z'].distinct().toArray();
@@ -284,6 +302,8 @@ Invoke closure function for each element.
 
     each((item: T) => void) => void
 
+*Usage*
+
 ```
 [1, 2, 3].each((i) => console.log(i));
 // 1, 2, 3
@@ -297,6 +317,8 @@ Returns the element at a specified zero-based index in a sequence.
 
     elementAt(index: number) => T
     elementAt(index: number, defaultValue: any) => T|defaultValue
+
+*Usage*
 
 ```
 let el = [0, 0, 0, 1, 'a', 2, 1, '1'].elementAt(6);
@@ -317,6 +339,8 @@ Produces the set difference of two sequences by using the equality comparer to c
 
     except(otherSequence: Iterable<T>) => _Linqable<T>
     except(otherSequence: Iterable<T>, equalityComparer: (item1: T, item2: T)) => _Linqable<T>
+
+*Usage*
 
 ```
 let a1 = [1, 2, 3];
@@ -344,6 +368,8 @@ Returns the first element of a sequence. Throws an except if no element found.
     first() => T
     first((item: T) => boolean) => T
 
+*Usage*
+
 ```
 let a = [5, 'a'].first();
 // a => 5
@@ -365,7 +391,9 @@ Returns the first element of the sequence that satisfies a condition or a defaul
 *Syntax*
 
     firstOrDefault((item: T) => boolean, defaultValue: any) => T
-    
+
+*Usage*
+
 ```
 let d = [1, 2, 3].firstOrDefault(i => false, 5);
 // d => 5
@@ -380,7 +408,9 @@ Groups the elements of a sequence.
     groupBy(keySelector: (item: T) => TKey) => _Linqable<{ key: TKey, value: T[] }>
     groupBy(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult) => _Linqable<{ key: TKey, value: T[] }>
     groupBy(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult, resultSelector: (result: TResult) => TGroup) => { key: TKey, value: TGroup }>
-    
+
+*Usage*
+
 ```
 let r = [1, 2, 3, 'a', 'b', 'c'].groupBy(i => Number.isInteger(i) ? 'Number' : 'Letter').toArray();
 
@@ -400,7 +430,9 @@ Correlates the elements of two sequences based on equality of keys and groups th
 *Syntax*
 
     groupJoin(inner: Iterable<TInner>, outerKeySelector: (item: TOuter) => TKey, innerKeySelector: (item: TInner) => TKey, resultSelector: (outer: TOuter, inner: Iterable<TInner>) => TResult) => _Linqable<TResult>
-    
+
+*Usage*
+
 ```
 let magnus = { Name: "Hedlund, Magnus" };
 let terry = { Name: "Adams, Terry" };
@@ -442,6 +474,8 @@ Produces the set intersection of two sequences.
 
     intersect(otherSequence: Iterable<T>) => _Linqable<T>
     intersect(otherSequence: Iterable<T>, equalityComparer(item1: T, item2: T) => boolean) => _Linqable<T>
+
+*Usage*
 
 ```
 let a1 = [1, 1, 2, '3', 4, '5', true, false, Number.MAX_SAFE_INTEGER];
@@ -491,7 +525,9 @@ Returns the last element of a sequence.
     last() => T
     last(predicate: (item: T) => boolean) => T
     last(predicate: (item: T) => boolean, defaultValue: T) => T|defaultValue
-    
+
+*Usage*
+
 ```
 let last = [1, 1, ',', undefined].last();
 // last => undefined
@@ -509,6 +545,8 @@ Returns the maximum value in a sequence.
     max() => T
     max(keySelector: (item: T) => TKey) => T
     max(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => T
+
+*Usage*
 
 ```
 let max = [1, -Infinity, -.2, 2, '5'].max();
@@ -528,6 +566,8 @@ Returns the minimum value in a sequence.
     min(keySelector: (item: T) => TKey) => T
     min(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => T
 
+*Usage*
+
 ```
 let a = [-Infinity, 0].min();
 // a => -Infinity
@@ -539,7 +579,9 @@ Filters the elements of an sequence based on a specified type.
 *Syntax*
 
     ofType(type) => _Linqable<T>
-    
+
+*Usage*
+
 ```
 class MyType {
 
@@ -576,7 +618,9 @@ Sorts the elements of a sequence in ascending/descending order
     orderByDescending() => _Linqable<T>
     orderByDescending(keySelector: (item: T) => TKey) => _Linqable<T>
     orderByDescending(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => _Linqable<T>
-    
+
+*Usage*
+
 ```
 let unorderedlist = [1, Infinity, -8, 3, -0, +0, (-Infinity)];
 let ordered = unorderedList.orderBy(i => i).toList();
@@ -596,7 +640,9 @@ Inverts the order of the elements in a sequence.
 *Syntax*
 
     reversed() => _Linqable<T>
-    
+
+*Usage*
+
 ```
 let a = [1, 2, 3].reversed().toList();
 // a => [3, 2, 1]
@@ -609,7 +655,9 @@ Projects each element of a sequence into a new form. It also be called *map* by 
 *Syntax*
 
     select(transform: (item: T, index: number) => TResult) => _Linqable<TResult>
-    
+
+*Usage*
+
 ```
 let n = [1, 2, 3, -1, 2, 1].select(i => i * 2).toList();
 // n => 2, 4, 6, -2, 4, 2
@@ -621,7 +669,9 @@ Projects each element of a sequence to an _Linqable<T> and flattens the resultin
 *Syntax*
 
     selectMany(selector: (item: T, index: number) => Iterable<T>) => _Linqable<TResult>
-    
+
+*Usage*
+
 ```
 let multi = [[1, 2, 3], [4, 5 ,6], 7];
 let fl = multi.selectMany(i => i).toArray();
@@ -644,6 +694,8 @@ Determines whether two sequences are equal by comparing the elements by using eq
     sequenceEqual(otherSeq: Iterable<T>) => boolean
     sequenceEqual(otherSeq: Iterable<T>, equalityComparer: (item1: T, item2: T) => boolean) => boolean
 
+*Usage*
+
 ```
 let a1 = ['1', '2', '3', 4, 5];
 let a2 = ['1', '2', '3', 4, 5];
@@ -665,6 +717,8 @@ Returns the only element of a sequence that satisfies a specified condition or a
     single(predicate: (item: T) => boolean) => T
     singleOrDefault(predicate: (item: T) => boolean, defaultValue) => T|defaultValue
 
+*Usage*
+
 ```
 let arr = [1, '2', 3, 3, 2, ''];
 let n = arr.single(i => i === 2);
@@ -684,7 +738,9 @@ Bypasses a specified number of elements in a sequence and then returns the remai
 *Syntax*
 
     skip(count: number) => _Linqable<T>
-    
+
+*Usage*
+
 ```
 let a = [1, 2, 3, 4, 5, 6, 7, 8];
 let sk = a.skip(3).toArray();
@@ -701,7 +757,9 @@ Bypasses elements in a sequence as long as a specified condition is true and the
 *Syntax*
 
     skipWhile(predicate: (item: T) => boolean) => _Linqable<T>
-    
+
+*Usage*
+
 ```
 let n = [5000, 2500, 9000, 8000, 6500, 4000, 1500, 5500];
 let sk = n.skipWhile((i, index) => i > 1000 * index).toArray();
@@ -716,7 +774,9 @@ Computes the sum of a sequence.
 
     sum() => number
     sum(transform: (item: T) => number) => number
-    
+
+*Usage*
+
 ```
 let a = ['1', 1, 1].sum();
 // a => 3
@@ -732,6 +792,8 @@ Returns a specified number of contiguous elements from the start of a sequence.
 *Syntax*
 
     take(count: number) => _Linqable<T>
+
+*Usage*
 
 ```
 let arr = [1, 2, 4, 5, 8, ['a', 'b', [[['a', ['a'], [2]]]]], 10, -1];
@@ -749,6 +811,8 @@ Returns elements from a sequence as long as a specified condition is true. The e
 *Syntax*
 
     takeWhile(predicate: (item: T) => boolean) => _Linqable<T>
+
+*Usage*
 
 ```
 let fruits = ["apple", "passionfruit", "banana", "mango", "orange", "blueberry", "grape", "strawberry"];
@@ -768,7 +832,9 @@ Creates an array from iterable sequence.
 
     toArray() => T[];
     toList() => T[];
-    
+
+*Usage*
+
 ```
 let a = [1, 2, 3, 4, 5].where(i => i > 3).toArray();
 // a => [4, 5]
@@ -782,7 +848,9 @@ Creates a `Map<k, v>` from an `Iterable<T>` according to a specified key selecto
 
     toMap(keySelector: (item: T) => TKey) => Map<TKey, T>
     toMap(keySelector: (item: T) => TKey, elementSelector: (item: T) => TValue) => Map<TKey, TValue>
-    
+
+*Usage*
+
 ```
 let coms = [
     { Company: "Coho Vineyard", Weight: 25.2, TrackingNumber: 89453312 },
@@ -802,7 +870,9 @@ Produces the set union of two sequences.
 
     union(otherSeq: Iterable<T>) => _Linqable<T>
     union(otherSeq: Iterable<T>, equalityComparer: (item1: T, item2: T) => boolean) => _Linqable<T>
-    
+
+*Usage*
+
 ```
 let a1 = [1, 1, 2, 1, 2, 4, 2, 4];
 let a2 = [1, 3, 2, 1, 4, '1', '2'];
@@ -822,6 +892,8 @@ Filters a sequence of values based on a predicate.
 
     where(predicate: (item: T, index: number) => boolean) => _Linqable<T>
 
+*Usage*
+
 ```
 let numArray = [-10, 20, -5, 5, 8, Number.MAX_VALUE];
 var fa = numArray.where(i => i > 0);
@@ -836,7 +908,9 @@ Applies a specified function to the corresponding elements of two sequences, pro
 
     zip() => _Linqable<T>
     zip(second: Iterable<TSecond>, func: (item1: T, item2: TSecond) => TResult) => _Linqable<TResult>
-    
+
+*Usage*
+
 ```
 let a1 = [1, 2, 3, 4];
 let w1 = [ "one", "two", "three" ];
