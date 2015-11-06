@@ -367,3 +367,130 @@ assert.deepEqual(r[1].value, ['a', 'b', 'c']);
 ```
 
 **groupJoin**
+
+Correlates the elements of two sequences based on equality of keys and groups the results.
+
+    groupJoin(inner: Iterable<TInner>, outerKeySelector: (item: TOuter) => TKey, innerKeySelector: (item: TInner) => TKey, resultSelector: (outer: TOuter, inner: Iterable<TInner>) => TResult) => _Linqable<TResult>
+    
+```
+let magnus = { Name: "Hedlund, Magnus" };
+let terry = { Name: "Adams, Terry" };
+let charlotte = { Name: "Weiss, Charlotte" };
+
+let barley = { Name: "Barley", Owner: terry };
+let boots = { Name: "Boots", Owner: terry };
+let whiskers = { Name: "Whiskers", Owner: charlotte };
+let daisy = { Name: "Daisy", Owner: magnus };
+
+let people = [magnus, terry, charlotte];
+let pets = [barley, boots, whiskers, daisy];
+
+let peopleWithPets = people.groupJoin(pets, person => person, pet => pet.Owner, (person, petCollection) => {
+  return {  
+    owner: person.Name,
+    pets: petCollection.select(pet => pet.Name).toArray()
+  }
+}).toArray();
+
+assert.deepEqual(peopleWithPets[0], { owner: magnus.Name, pets: [daisy.Name] });
+assert.deepEqual(peopleWithPets[1], { owner: terry.Name, pets: [barley.Name, boots.Name] });
+assert.deepEqual(peopleWithPets[2], { owner: charlotte.Name, pets: [whiskers.Name] });
+
+// Hedlund, Magnus:
+//   Daisy
+// Adams, Terry:
+//   Barley
+//   Boots
+// Weiss, Charlotte:
+//   Whiskers
+```
+
+**intersect**
+
+Produces the set intersection of two sequences.
+
+    intersect(otherSequence: Iterable<T>) => _Linqable<T>
+    intersect(otherSequence: Iterable<T>, equalityComparer(item1: T, item2: T) => boolean) => _Linqable<T>
+
+```
+let a1 = [1, 1, 2, '3', 4, '5', true, false, Number.MAX_SAFE_INTEGER];
+let a2 = [3, 4, 4, 1, true, Number.MAX_SAFE_INTEGER];
+
+let inter = a1.intersect(a2).toArray();
+// inter => [1, 4, true, Number.MAX_SAFE_INTEGER]
+```
+
+joinWith
+
+Correlates the elements of two sequences based on matching keys. 
+
+    joinWith(inner: Iterable<TInner>, outerKeySelector: (item: TOuter) => TKey, innerKeySelector: (item: TInner) => TKey, resultSelector: (TOuter, TInner) => TResult) => _Linqable<T>
+    joinWith(inner: Iterable<TInner>, outerKeySelector: (item: TOuter) => TKey, innerKeySelector: (item: TInner) => TKey, resultSelector: (TOuter, TInner) => TResult, keyEqualityComparer: (key1: TKey, key2: TKey) => boolean) => _Linqable<T>
+
+```
+let magnus = { Name: "Hedlund, Magnus" };
+let terry = { Name: "Adams, Terry" };
+let charlotte = { Name: "Weiss, Charlotte" };
+
+let barley = { Name: "Barley", Owner: terry };
+let boots = { Name: "Boots", Owner: terry };
+let whiskers = { Name: "Whiskers", Owner: charlotte };
+let daisy = { Name: "Daisy", Owner: magnus };
+
+let people = [magnus, terry, charlotte];
+let pets = [barley, boots, whiskers, daisy];
+
+let peopleWithPets = people.joinWith(pets, person => person, pet => pet.Owner, (person, pet) => { return { OwnerName: person.Name, Pet: pet.Name }}).toArray();
+
+// Result: 
+// Hedlund, Magnus - Daisy
+// Adams, Terry - Barley
+// Adams, Terry - Boots
+// Weiss, Charlotte - Whiskers
+```
+
+**last**
+
+Returns the last element of a sequence.
+
+    last() => T
+    last(predicate: (item: T) => boolean) => T
+    last(predicate: (item: T) => boolean, defaultValue: T) => T|defaultValue
+    
+```
+let last = [1, 1, ',', undefined].last();
+// last => undefined
+
+let lastDv = [].last(i => true, 2);
+// lastDv => 2
+```
+
+**max**
+
+Returns the maximum value in a sequence.
+
+    max() => T
+    max(keySelector: (item: T) => TKey) => T
+    max(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => T
+
+```
+let max = [1, -Infinity, -.2, 2, '5'].max();
+// max => '5'
+
+let max = [1, -Infinity, -.2, 2, '5.1'].max(i => Number.parseFloat(i));
+// max => '5.1';
+```
+
+**min**
+
+Returns the minimum value in a sequence.
+
+    min() => T
+    min(keySelector: (item: T) => TKey) => T
+    min(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => 1|0|-1) => T
+
+```
+let a = [-Infinity, 0].min();
+// a => -Infinity
+```
+
