@@ -93,4 +93,15 @@ describe('test String linqable', () => {
   it('where', () => {
     assert(ss.where(i => i > 's').count() === 0);
   });
+  
+  it('ipv6', () => {
+    let dstAddr = '';
+    
+    let bytes = new Buffer([0x82, 0x89, 0x90, 0xef, 0x11, 0xff, 0xbc, 0x86, 0x23, 0x98, 0x00, 0xaf, 0x17, 0x33, 0xcc, 0x16]);
+    for (let i = 0; i < 8; i++) {
+      dstAddr += (new Buffer(bytes.skip(i * 2).take(2).toArray()).toString('hex') + (i < 7 ? ':' : ''));
+    }
+    
+    assert(require('net').isIPv6(dstAddr));
+  })
 });
