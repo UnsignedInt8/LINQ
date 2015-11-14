@@ -956,5 +956,6 @@ let KINQ = function(options) {
 }
 
 KINQ.toLinqable = toLinqable;
+KINQ.enable = KINQ;
 
 module.exports = KINQ;
