@@ -22,8 +22,8 @@ describe('test single operator', () => {
     assert.equal(dv, 0);
   });
   
-  it('should be default value', () => {
-    let df = arr.singleOrDefault(i => i === 8, 0);
-    assert.equal(df, 0);
+  it('should be undefined', () => {
+    let df = arr.singleOrDefault(i => i === 8, undefined);
+    assert.equal(df, undefined);
   });
 });

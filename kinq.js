@@ -689,7 +689,7 @@ function single(predicate, defaultValue) {
     count++;
   }
   
-  if (singleItem === undefined && defaultValue !== undefined) return defaultValue;
+  if (singleItem === undefined && arguments.length == 2) return defaultValue;
   
   if (count === 0) throw new Error('The source sequence is empty.');
   if (!singleItem) throw new Error('No element satisfies the condition in predicate.');
