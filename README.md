@@ -2,6 +2,8 @@
 
 **KINQ is LINQ for Node.js bases on ES6.**
 
+[![Build Status](https://travis-ci.org/SunshinyNeko/Kinq.svg?branch=master)](https://travis-ci.org/SunshinyNeko/Kinq)
+
 What's LINQ?
 ------------
 
