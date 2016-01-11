@@ -930,7 +930,7 @@ let KINQ = function(options) {
     aggregate, all, any, average, contains, 
     count, elementAt, each,
     first, firstOrDefault,
-    last, max, min, sum, sequenceEqual, single,
+    last, max, min, sum, sequenceEqual, single, singleOrDefault,
     toArray, toList, toMap, toDictionary];
     
   let linqOperators = execOperators.concat(iterableOperators);
