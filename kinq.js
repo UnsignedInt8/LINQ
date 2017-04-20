@@ -33,22 +33,22 @@ function aggregate(transform) {
 }
 
 function aggregate_seed_transform_selector(seed, transform, resultTransform) {
-  
+
   let it = this[Symbol.iterator]();
   let current = it.next();
-  if (current.done) return current.value;
+  if (current.done) return current.value || seed;
   let result = typeof seed === 'undefined' ? current.value : transform(seed, current.value);
-  
+
   let next = it.next();
-  while(!next.done) {
+  while (!next.done) {
     result = transform(result, next.value);
     next = it.next();
   }
-  
+
   if (typeof resultTransform === 'function') {
     return resultTransform(result);
   }
-  
+
   return result;
 }
 
@@ -65,7 +65,7 @@ function all(predicate) {
       return false;
     }
   }
-  
+
   return true;
 }
 
@@ -78,11 +78,11 @@ function all(predicate) {
  */
 function any(predicate) {
   predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
-  
+
   for (let item of this) {
     if (predicate(item)) return true;
   }
-  
+
   return false;
 }
 
@@ -106,7 +106,7 @@ function* concatenate(otherSequence) {
   for (let item of this) {
     yield item;
   }
-  
+
   for (let otherItem of otherSequence) {
     yield otherItem;
   }
@@ -120,12 +120,12 @@ function* concatenate(otherSequence) {
  * equalityComparer: (item1, item2) -> Boolean
  */
 function contains(item, equalityComparer) {
-  equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer; 
-  
+  equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
+
   for (let i of this) {
     if (equalityComparer(i, item)) return true;
   }
-  
+
   return false;
 }
 
@@ -137,13 +137,13 @@ function contains(item, equalityComparer) {
  */
 function count(predicate) {
   predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
-  
+
   let c = 0;
-  
+
   for (let item of this) {
     if (predicate(item)) c++;
   }
-  
+
   return c;
 }
 
@@ -154,12 +154,12 @@ function count(predicate) {
  */
 function* defaultIfEmpty(defaultValue) {
   let i = 0;
-  
+
   for (let item of this) {
     yield item;
     i++;
   }
-  
+
   if (i === 0) {
     yield defaultValue;
   }
@@ -174,7 +174,7 @@ function* defaultIfEmpty(defaultValue) {
 function* distinct(equalityComparer) {
   let exists = typeof equalityComparer === 'function' ? new util.ComparableSet(equalityComparer) : new Set();
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
-  
+
   for (let item of this) {
     if (exists.has(item)) continue;
     exists.add(item);
@@ -187,7 +187,7 @@ function* distinct(equalityComparer) {
  */
 function each(callback) {
   let i = 0;
-  
+
   for (let item of this) {
     callback(item, i++);
   }
@@ -202,12 +202,12 @@ function each(callback) {
  */
 function elementAt(index, defaultValue) {
   let i = 0;
-  
+
   for (let item of this) {
     if (i === index) return item;
     i++;
   }
-  
+
   return defaultValue;
 }
 
@@ -227,17 +227,17 @@ function empty() {
  */
 function* except(otherSequence, equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
-  
+
   for (let item of this) {
     let equal = false;
-    
+
     for (let otherItem of otherSequence) {
       if (equalityComparer(item, otherItem)) {
         equal = true;
         break;
-      } 
+      }
     }
-    
+
     if (equal) continue;
     yield item;
   }
@@ -252,11 +252,11 @@ function* except(otherSequence, equalityComparer) {
  */
 function first(predicate) {
   predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
-  
+
   let error = new Error('No element satisfies the condition in predicate.');
   let firstElement = firstOrDefault.apply(this, [predicate, error]);
   if (firstElement === error) throw error;
-  
+
   return firstElement;
 }
 
@@ -272,7 +272,7 @@ function firstOrDefault(predicate, defaultValue) {
   for (let item of this) {
     if (predicate(item)) return item;
   }
-  
+
   return defaultValue;
 }
 
@@ -295,14 +295,14 @@ function* flatten(deep) {
  * @return Returns iterable grouped items. Each item is { key: key, value: [items] }
  */
 function* groupBy(keySelector, elementSelector, resultTransform) {
-  
+
   let group = () => {
     let map = new Map();
-  
+
     for (let item of this) {
       let key = keySelector(item);
       let el = elementSelector ? elementSelector(item) : item;
-      
+
       let list = map.get(key);
       if (list) {
         list.push(el);
@@ -310,12 +310,12 @@ function* groupBy(keySelector, elementSelector, resultTransform) {
         map.set(key, [el]);
       }
     }
-    
-    return map;  
+
+    return map;
   }
-  
+
   for (let kv of group()) {
-    let groupItem =  { key: kv[0], value: kv[1] };
+    let groupItem = { key: kv[0], value: kv[1] };
     groupItem = typeof resultTransform === 'function' ? resultTransform(groupItem) : groupItem;
     yield groupItem;
   }
@@ -334,10 +334,10 @@ function* groupBy(keySelector, elementSelector, resultTransform) {
  * resultSelector: (outerItem, [groupedInnerItem]) -> result
  */
 function* groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
-  
+
   let group = (iterable, keySelector) => {
     let map = new Map();
-    
+
     for (let item of iterable) {
       let key = keySelector(item);
       let list = map.get(key);
@@ -347,19 +347,19 @@ function* groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
         map.set(key, [item]);
       }
     }
-    
+
     return map;
   }
-  
+
   for (let outerGroupItem of group(this, outerKeySelector)) {
     let outerKey = outerGroupItem[0];
     let outerItems = outerGroupItem[1];
-    
+
     let innerGroups = group(inner, innerKeySelector);
     let innerItems = innerGroups.get(outerKey);
-    
+
     if (!innerItems) continue;
-    
+
     for (let outerItem of outerItems) {
       let result = resultSelector(outerItem, innerItems);
       yield result;
@@ -376,7 +376,7 @@ function* groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
  */
 function* intersect(otherSequence, equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
-  
+
   for (let item of this.distinct(equalityComparer)) {
     for (let otherItem of otherSequence) {
       if (equalityComparer(item, otherItem)) {
@@ -403,13 +403,13 @@ function* intersect(otherSequence, equalityComparer) {
  */
 function* joinWith(inner, outerKeySelector, innerKeySelector, resultSelector, keyEqualityComparer) {
   keyEqualityComparer = typeof keyEqualityComparer === 'function' ? keyEqualityComparer : util.defaultEqualityComparer;
-  
+
   for (let outerItem of this) {
     let outerKey = outerKeySelector(outerItem);
-    
-    for(let innerItem of inner) {
+
+    for (let innerItem of inner) {
       let innerKey = innerKeySelector(innerItem);
-      
+
       if (keyEqualityComparer(outerKey, innerKey)) {
         yield resultSelector(outerItem, innerItem);
       }
@@ -426,14 +426,14 @@ function* joinWith(inner, outerKeySelector, innerKeySelector, resultSelector, ke
  */
 function last(predicate, defaultValue) {
   predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
-   
+
   let lastValue;
   let found = false;
   for (let item of this.where(predicate)) {
     lastValue = item;
     found = true;
   }
-  
+
   return found ? lastValue : defaultValue;
 }
 
@@ -448,10 +448,10 @@ function last(predicate, defaultValue) {
  */
 function max(keySelector, comparer) {
   comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
-  
+
   let seq;
   let maximum;
-  
+
   if (typeof keySelector === 'function') {
     seq = this.select(keySelector);
     maximum = keySelector(toLinqable(seq).firstOrDefault()); // The first element should pick from self
@@ -459,11 +459,11 @@ function max(keySelector, comparer) {
     seq = this;
     maximum = toLinqable(seq).firstOrDefault();
   }
-  
-  for (let item of seq) {
+
+  for (let item of toLinqable(typeof keySelector === 'function' ? this.select(keySelector) : this)) {
     maximum = comparer(item, maximum) > 0 ? item : maximum;
   }
-  
+
   return maximum;
 }
 
@@ -476,10 +476,10 @@ function max(keySelector, comparer) {
  */
 function min(keySelector, comparer) {
   comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
-  
+
   let seq;
   let minimum;
-  
+
   if (typeof keySelector === 'function') {
     seq = this.select(keySelector);
     minimum = keySelector(seq.firstOrDefault());
@@ -487,11 +487,11 @@ function min(keySelector, comparer) {
     seq = this;
     minimum = toLinqable(seq).firstOrDefault();
   }
-  
+
   for (let item of seq) {
     minimum = comparer(item, minimum) < 0 ? item : minimum;
   }
-  
+
   return minimum;
 }
 
@@ -504,27 +504,27 @@ function min(keySelector, comparer) {
 function* ofType(type) {
   // let builtinTypes = ['number', 'string', 'object', 'boolean', 'undefined', 'symbol'];
   if (typeof type === 'string') type = type.toLowerCase();
-  
+
   let check = (instance) => {
     if (instance === null || instance === undefined) return false;
     let primitiveType = typeof instance;
-    
+
     if (primitiveType === 'object' && typeof type === 'function') {
       return instance instanceof type;
     }
-    
+
     return primitiveType === type;
   };
-  
-  for (let item of this.where(i => check(i)))  {
+
+  for (let item of this.where(i => check(i))) {
     yield item;
   }
 }
 
 let sort = (list, keySelector, comparer) => {
-  comparer = typeof comparer === 'function' ? comparer : util.defaultComparer; 
+  comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
   let sortedList = list.sort((i1, i2) => comparer(keySelector ? keySelector(i1) : i1, keySelector ? keySelector(i2) : i2));;
-  
+
   return sortedList;
 };
 
@@ -561,7 +561,7 @@ function* orderByDescending(keySelector, comparer) {
  */
 function* reversed() {
   let list = this.toList();
-  
+
   for (let i = list.length - 1; i >= 0; i--) {
     yield list[i];
   }
@@ -576,7 +576,7 @@ function* reversed() {
  */
 function* select(transform) {
   let i = 0;
-  
+
   for (let item of this) {
     yield transform(item, i);
     i++;
@@ -598,39 +598,39 @@ function* selectMany(selector) {
 function* selectMany_deep(selector, deep) {
   selector = typeof selector === 'function' ? selector : util.defaultSelector;
   deep = typeof deep === 'boolean' ? deep : false;
-  
+
   let makeSimple = function* (item) {
     let iterator = item[Symbol.iterator];
     if (!iterator) {
       return yield item;
     }
-    
+
     if (deep && toLinqable(item[Symbol.iterator]()).count() === 1) {
       let only = toLinqable(item).single();
       if (only === item) {
         return yield only;
       }
-      
+
       for (let i of makeSimple(only)) {
         yield i;
       }
-      
+
       return;
     }
-            
+
     for (let x of item) {
       if (deep) {
         for (let d of makeSimple(x)) {
           yield d;
         }
-      } else { 
+      } else {
         yield x;
       }
-    } 
+    }
   }
-  
+
   let i = 0;
-  
+
   for (let item of this) {
     let result = selector(item, i++);
     for (let sub of makeSimple(result)) {
@@ -649,19 +649,19 @@ function sequenceEqual(otherSequence, equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
   let selfIterator = this[Symbol.iterator] ? this[Symbol.iterator]() : undefined;
   let otherIterator = otherSequence[Symbol.iterator] ? otherSequence[Symbol.iterator]() : undefined;
-  
+
   if (toLinqable([selfIterator, otherIterator]).any(i => i === undefined)) return false;
-  
+
   let selfItem;
   let otherItem;
-  
+
   do {
     selfItem = selfIterator.next();
     otherItem = otherIterator.next();
-    
-    if (!equalityComparer(selfItem.value, otherItem.value)) return false;  
-  }while(!selfItem.done);
-  
+
+    if (!equalityComparer(selfItem.value, otherItem.value)) return false;
+  } while (!selfItem.done);
+
   return selfItem.done === otherItem.done;
 }
 
@@ -674,7 +674,7 @@ function sequenceEqual(otherSequence, equalityComparer) {
  */
 function single(predicate, defaultValue) {
   predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
-  
+
   let count = 0;
   let singleItem = undefined;
   for (let item of this) {
@@ -685,15 +685,15 @@ function single(predicate, defaultValue) {
         throw new Error('More than one element satisfies the condition in predicate.');
       }
     }
-    
+
     count++;
   }
-  
+
   if (singleItem === undefined && arguments.length == 2) return defaultValue;
-  
+
   if (count === 0) throw new Error('The source sequence is empty.');
   if (!singleItem) throw new Error('No element satisfies the condition in predicate.');
-  
+
   return singleItem;
 }
 
@@ -701,7 +701,7 @@ function single(predicate, defaultValue) {
  * Alias of single
  */
 function singleOrDefault(predicate, defaultValue) {
-  return single.apply(this, [predicate, defaultValue]);  
+  return single.apply(this, [predicate, defaultValue]);
 }
 
 /**
@@ -712,9 +712,9 @@ function singleOrDefault(predicate, defaultValue) {
  */
 function* skip(count) {
   let skipped = 0;
-  
+
   for (let item of this) {
-    if (skipped++ < count) continue; 
+    if (skipped++ < count) continue;
     yield item;
   }
 }
@@ -728,10 +728,10 @@ function* skip(count) {
 function* skipWhile(predicate) {
   let satisfied = false;
   let index = 0;
-  
+
   for (let item of this) {
     if (!satisfied && predicate(item, index++)) continue;
-    
+
     satisfied = true;
     yield item;
   }
@@ -746,11 +746,11 @@ function* skipWhile(predicate) {
 function sum(transform) {
   let sum = 0;
   let seq = typeof transform === 'function' ? this.select(transform) : this;
-  
+
   for (let item of seq) {
     sum += Number.parseFloat(item);
   }
-  
+
   return sum;
 }
 
@@ -762,7 +762,7 @@ function sum(transform) {
  */
 function* take(count) {
   let taken = 0;
-  
+
   for (let item of this) {
     if (taken++ >= count) break;
     yield item;
@@ -778,7 +778,7 @@ function* take(count) {
 function* takeWhile(predicate) {
   predicate = typeof predicate === 'function' ? predicate : util.defaultPredicate;
   let index = 0;
-  
+
   for (let item of this) {
     if (predicate(item, index++)) {
       yield item;
@@ -794,7 +794,7 @@ function* takeWhile(predicate) {
 function* thenBy(keySelector, comparer) {
   for (let item of orderBy.apply(this, [keySelector, comparer])) {
     yield item;
-  }  
+  }
 }
 
 /**
@@ -841,13 +841,13 @@ function toDictionary(keySelector, elementSelector) {
 function toMap(keySelector, elementSelector) {
   elementSelector = typeof elementSelector === 'function' ? elementSelector : i => i;
   let map = new Map();
-  
+
   for (let item of this) {
     let key = keySelector(item);
     let element = elementSelector(item);
     map.set(key, element);
   }
-  
+
   return map;
 }
 
@@ -859,13 +859,13 @@ function toMap(keySelector, elementSelector) {
  * @return A sequence that contains the elements from both input sequences, no duplicates.
  */
 function* union(otherSequence, equalityComparer) {
-  
+
   let distinctSeq = this.distinct(equalityComparer).toArray();
-  
+
   for (let item of distinctSeq) {
     yield item;
   }
-  
+
   for (let item of toLinqable(otherSequence).distinct(equalityComparer).where(i => !distinctSeq.contains(i, equalityComparer))) {
     yield item;
   }
@@ -880,12 +880,12 @@ function* union(otherSequence, equalityComparer) {
  */
 function* where(predicate) {
   let i = 0;
-  
+
   for (let item of this) {
     if (predicate(item, i)) {
       yield item;
     }
-    
+
     i++;
   }
 }
@@ -900,59 +900,59 @@ function* where(predicate) {
  */
 function* zip(otherSequence, resultSelector) {
   resultSelector = typeof resultSelector === 'function' ? resultSelector : (i1, i2) => [i1, i2];
-  
+
   let selfIterator = this[Symbol.iterator]();
   let otherIterator = otherSequence[Symbol.iterator]();
-  
+
   let selfItem = selfIterator.next();
   let otherItem = otherIterator.next();
-  
+
   while (!selfItem.done) {
     if (selfItem.value === undefined || otherItem.value === undefined) break;
     yield resultSelector(selfItem.value, otherItem.value);
-    
+
     selfItem = selfIterator.next();
     otherItem = otherIterator.next();
   }
 }
 
-let KINQ = function(options) {
-  
+let KINQ = function (options) {
+
   let iterableOperators = [
-    concatenate, defaultIfEmpty, distinct, except, 
-    flatten, groupBy, groupJoin, intersect, 
-    joinWith, ofType, orderBy, orderByDescending, 
-    reversed, select, selectMany, skip, skipWhile, 
+    concatenate, defaultIfEmpty, distinct, except,
+    flatten, groupBy, groupJoin, intersect,
+    joinWith, ofType, orderBy, orderByDescending,
+    reversed, select, selectMany, skip, skipWhile,
     take, takeWhile, thenBy, thenByDescending, where,
     union, zip];
-    
+
   let execOperators = [
-    aggregate, all, any, average, contains, 
+    aggregate, all, any, average, contains,
     count, elementAt, each,
     first, firstOrDefault,
     last, max, min, sum, sequenceEqual, single, singleOrDefault,
     toArray, toList, toMap, toDictionary];
-    
+
   let linqOperators = execOperators.concat(iterableOperators);
-  
+
   let linqChain = {};
   linqOperators.forEach((item) => linqChain[item.name] = item);
   iterableOperators.forEach((func) => Object.assign(func.prototype, linqChain));
-  
+
   let linq = {};
   linqOperators.forEach((item) => linq[item.name] = item);
-  
-  let iterableObjects = [toLinqable.prototype, 
-    Array.prototype, 
-    Map.prototype, 
-    Set.prototype, 
-    WeakMap.prototype, 
-    WeakSet.prototype, 
-    String.prototype,
-    Buffer.prototype
+
+  let iterableObjects = [toLinqable.prototype,
+  Array.prototype,
+  Map.prototype,
+  Set.prototype,
+  WeakMap.prototype,
+  WeakSet.prototype,
+  String.prototype,
+  Buffer.prototype
   ];
   iterableObjects.forEach(item => Object.assign(item, linq));
-  
+
 }
 
 KINQ.toLinqable = toLinqable;
