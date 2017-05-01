@@ -489,6 +489,6 @@ declare interface IterableIterator<T> extends _Linqable<T> {
   
 }
 
-declare interface NodeBuffer extends _Linqable<number> {
+declare interface Buffer extends _Linqable<number> {
   
 }
