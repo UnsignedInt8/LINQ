@@ -942,15 +942,17 @@ let KINQ = function (options) {
   let linq = {};
   linqOperators.forEach((item) => linq[item.name] = item);
 
-  let iterableObjects = [toLinqable.prototype,
-  Array.prototype,
-  Map.prototype,
-  Set.prototype,
-  WeakMap.prototype,
-  WeakSet.prototype,
-  String.prototype,
-  Buffer.prototype
+  let iterableObjects = [
+    toLinqable.prototype,
+    Array.prototype,
+    Map.prototype,
+    Set.prototype,
+    WeakMap.prototype,
+    WeakSet.prototype,
+    String.prototype,
+    Buffer.prototype
   ];
+
   iterableObjects.forEach(item => Object.assign(item, linq));
 
 }
