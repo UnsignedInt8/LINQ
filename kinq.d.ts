@@ -403,7 +403,7 @@ declare interface _Linqable<T> {
   /**
     * Alias of toMap
     */
-    toDictionary<TKey, TResult>(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult): any;
+    toDictionary<TKey, TResult>(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult): Map<TKey, TResult>;
     
   /**
     * Creates a map from a sequenece according to a specified key selector function, a comparer, and an element selector function.
@@ -414,7 +414,7 @@ declare interface _Linqable<T> {
     * keySelector: (item) -> key (Required)
     * elementSelector: (item) -> value (Optional)
     */
-    toMap<TKey, TResult>(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult): any;
+    toMap<TKey, TResult>(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult): Map<TKey, TResult>;
     
   /**
     * Produces the set union of two sequences by using a specified equalityComparer.

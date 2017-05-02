@@ -1,6 +1,6 @@
 # KINQ
 
-**KINQ is LINQ for Node.js bases on ES6.**
+**KINQ is LINQ for Node.js which is based on ES6.**
 
 [![Build Status](https://travis-ci.org/UnsignedInt8/Kinq.svg?branch=master)](https://travis-ci.org/UnsignedInt8/Kinq)
 
