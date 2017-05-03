@@ -851,6 +851,8 @@ function toDictionary(keySelector, elementSelector) {
  * elementSelector: (item) -> value (Optional)
  */
 function toMap(keySelector, elementSelector) {
+  if (!keySelector) return new Map(this);
+
   elementSelector = typeof elementSelector === 'function' ? elementSelector : i => i;
   let map = new Map();
 
