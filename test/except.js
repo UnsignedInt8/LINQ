@@ -50,8 +50,8 @@ describe('test except operator', () => {
     }
 
     let begin = Date.now();
-    let m3 = new Map(m1.except(m2, ([k1, v1], [k2, v2]) => k1 == k2));
-    let a3 = Array.from(m1.except(m2, ([k1, v1], [k2, v2]) => k1 == k2));
+    let m3 = new Map(m1.except(m2));
+    let a3 = Array.from(m1.except(m2));
     let end = Date.now();
     assert.equal(m3.size > 0, true);
     assert.equal(a3.length, m3.size);

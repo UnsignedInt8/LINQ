@@ -227,10 +227,10 @@ function empty() {
  */
 function* except(otherSequence, equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
-  let has = typeof otherSequence.has === 'function';
+  let isHash = (this instanceof Map || this instanceof Set) && (otherSequence instanceof Map || otherSequence instanceof Set);
   let selfIsMap = this instanceof Map;
 
-  if (has) {
+  if (isHash && equalityComparer === util.defaultEqualityComparer) {
     for (let item of this) {
       let key = selfIsMap ? item[0] : item;
       if (otherSequence.has(key)) continue;
