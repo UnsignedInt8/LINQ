@@ -1,6 +1,6 @@
 {
   "name": "kinq",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "LINQ for Node.js based on ES6",
   "main": "index.js",
   "scripts": {

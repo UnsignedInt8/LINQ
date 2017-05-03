@@ -227,6 +227,18 @@ function empty() {
  */
 function* except(otherSequence, equalityComparer) {
   equalityComparer = typeof equalityComparer === 'function' ? equalityComparer : util.defaultEqualityComparer;
+  let has = typeof otherSequence.has === 'function';
+  let selfIsMap = this instanceof Map;
+
+  if (has) {
+    for (let item of this) {
+      let key = selfIsMap ? item[0] : item;
+      if (otherSequence.has(key)) continue;
+      yield item;
+    }
+
+    return;
+  }
 
   for (let item of this) {
     let equal = false;

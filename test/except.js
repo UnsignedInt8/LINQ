@@ -1,6 +1,7 @@
 'use strict'
 
 require('../index')();
+const crypto = require('crypto');
 let assert = require('assert');
 
 describe('test except operator', () => {
@@ -37,5 +38,22 @@ describe('test except operator', () => {
 
     let r = m1.except(m2, ([k1, v1], [k2, v2]) => k1 === k2).toArray();
     assert.deepEqual(r, [['edge', 2]]);
+  });
+
+  it('to Map', () => {
+    let m1 = new Map();
+    let m2 = new Map();
+
+    for (let i = 0; i < 100000; i++) {
+      m1.set(crypto.randomBytes(2).toString('hex'), i);
+      m2.set(crypto.randomBytes(2).toString('hex'), i);
+    }
+
+    let begin = Date.now();
+    let m3 = new Map(m1.except(m2, ([k1, v1], [k2, v2]) => k1 == k2));
+    let a3 = Array.from(m1.except(m2, ([k1, v1], [k2, v2]) => k1 == k2));
+    let end = Date.now();
+    assert.equal(m3.size > 0, true);
+    assert.equal(a3.length, m3.size);
   });
 });
