@@ -459,21 +459,13 @@ function last(predicate, defaultValue) {
  * comparer: (item1, item2) -> -1|0|1
  */
 function max(keySelector, comparer) {
-  comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
+  let itComparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
+  let itKeySelector = typeof keySelector === 'function' ? keySelector : (i) => i;
 
-  let seq;
-  let maximum;
+  let maximum = this.firstOrDefault();
 
-  if (typeof keySelector === 'function') {
-    seq = this.select(keySelector);
-    maximum = keySelector(toLinqable(seq).firstOrDefault()); // The first element should pick from self
-  } else {
-    seq = this;
-    maximum = toLinqable(seq).firstOrDefault();
-  }
-
-  for (let item of toLinqable(typeof keySelector === 'function' ? this.select(keySelector) : this)) {
-    maximum = comparer(item, maximum) > 0 ? item : maximum;
+  for (let item of this) {
+    maximum = itComparer(itKeySelector(item), itKeySelector(maximum)) > 0 ? item : maximum;
   }
 
   return maximum;
@@ -487,21 +479,13 @@ function max(keySelector, comparer) {
  * @return The minimum value in the sequence.
  */
 function min(keySelector, comparer) {
-  comparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
+  let itComparer = typeof comparer === 'function' ? comparer : util.defaultComparer;
+  let itKeySelector = typeof keySelector === 'function' ? keySelector : (i) => i;
 
-  let seq;
-  let minimum;
+  let minimum = this.firstOrDefault();
 
-  if (typeof keySelector === 'function') {
-    seq = this.select(keySelector);
-    minimum = keySelector(seq.firstOrDefault());
-  } else {
-    seq = this;
-    minimum = toLinqable(seq).firstOrDefault();
-  }
-
-  for (let item of seq) {
-    minimum = comparer(item, minimum) < 0 ? item : minimum;
+  for (let item of this) {
+    minimum = itComparer(itKeySelector(item), itKeySelector(minimum)) < 0 ? item : minimum;
   }
 
   return minimum;

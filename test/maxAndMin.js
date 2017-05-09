@@ -24,6 +24,18 @@ describe('test max operator', () => {
     assert.equal(a, -Infinity);
   });
 
+  it('minimum in map', () => {
+    let m1 = new Map([['a', 1], ['aa', 2]]);
+    let item = m1.min(item => item[1]);
+    console.log(item);
+    assert.deepEqual(item, ['a', 1]);
+  });
+
+  it('has one itme', () => {
+    let a = [0].min();
+    assert.equal(a === 0, true);
+  })
+
   it('should be "z"', () => {
     let z = Array.from('abcdefgz').max();
     assert.equal(z, 'z');
