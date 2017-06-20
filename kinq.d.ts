@@ -20,12 +20,12 @@ declare interface _Linqable<T> extends Iterable<T> {
   /**
     * @see _Linqable<T>.aggregate
     */
-  aggregate<T, TResult>(seed: T, transform: (current: T, next: T) => TResult): TResult;
+  aggregate<T, TResult>(seed: T | TResult, transform: (current: T | TResult, next: T) => TResult): TResult;
 
   /**
   * @see _Linqable<T>.aggregate
   */
-  aggregate<T, TResult>(transform: (current: T, next: T) => TResult): TResult;
+  aggregate<T, TResult>(transform: (current: T | TResult, next: T) => TResult): TResult;
 
 
   /**
@@ -35,7 +35,7 @@ declare interface _Linqable<T> extends Iterable<T> {
     * @return All elements satisfy a condition returns true, or returns false.
     * predicate: (T) -> Boolean
     */
-  all(predicate: (T) => boolean): boolean;
+  all(predicate: (item: T) => boolean): boolean;
 
   /**
     * Determines whether a sequence contains any elements.
@@ -44,7 +44,7 @@ declare interface _Linqable<T> extends Iterable<T> {
     * @return Any elements satisfy a condition returns true, or returns false.
     * predicate: (T) -> Boolean
     */
-  any(predicate: (T) => boolean): boolean;
+  any(predicate: (item: T) => boolean): boolean;
 
   /**
   * 
@@ -184,8 +184,8 @@ declare interface _Linqable<T> extends Iterable<T> {
     * @param resultTransform A function to create a result value from each group. (Optional)
     * @return Returns iterable grouped items. Each item is { key: key, value: [items] }
     */
-  groupBy<TKey, TElement, TResult>(keySelector: (item: T) => TKey, elementSelector: (item: T) => TElement, resultTransform: (groupKey: TKey, items: TElement[]) => TResult): _Linqable<TResult>;
-  groupBy<TKey>(keySelector: (item: T) => TKey): _Linqable<T>;
+  groupBy<TKey, TElement, TResult>(keySelector: (item: T) => TKey, elementSelector: (item: T) => TElement, resultTransform: (groupKey: TKey, items: TElement[]) => TResult): _Linqable<{ key: TKey, value: TResult[] }>;
+  groupBy<TKey>(keySelector: (item: T) => TKey): _Linqable<{ key: TKey, value: T[] }>;
 
   /**
     * Correlates the elements of two sequences based on equality of keys and groups the results. The default equality comparer is used to compare keys.
@@ -275,7 +275,7 @@ declare interface _Linqable<T> extends Iterable<T> {
     * @param comparer An comparer to compare keys.
     * @return A sequence whose elements are sorted according to a key.
     */
-  orderBy<TKey>(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => number): _Linqable<T>;
+  orderBy<TKey>(keySelector: (item: T) => TKey, comparer: (item1: TKey, item2: TKey) => number): _Linqable<T>;
   orderBy<TKey>(keySelector: (item: T) => TKey): _Linqable<T>;
   orderBy(): _Linqable<T>;
 
@@ -286,7 +286,7 @@ declare interface _Linqable<T> extends Iterable<T> {
     * @param comparer An comparer to compare keys.
     * @return A sequence whose elements are sorted in descending order according to a key.
     */
-  orderByDescending<TKey>(keySelector: (item: T) => TKey, comparer: (item1: T, item2: T) => number): _Linqable<T>;
+  orderByDescending<TKey>(keySelector: (item: T) => TKey, comparer: (item1: TKey, item2: TKey) => number): _Linqable<T>;
   orderByDescending<TKey>(keySelector: (item: T) => TKey): _Linqable<T>;
   orderByDescending(): _Linqable<T>;
 

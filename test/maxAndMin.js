@@ -27,8 +27,13 @@ describe('test max operator', () => {
   it('minimum in map', () => {
     let m1 = new Map([['a', 1], ['aa', 2]]);
     let item = m1.min(item => item[1]);
-    console.log(item);
     assert.deepEqual(item, ['a', 1]);
+  });
+
+  it('minimum of values()', () => {
+    let m1 = new Map([['xx', 0], ['zzz', 1], ['ccc', 0], ['eee', -1]]);
+    let min = Array.from(m1.values()).min();
+    assert.equal(min, -1);
   });
 
   it('has one itme', () => {
