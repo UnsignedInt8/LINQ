@@ -1,6 +1,6 @@
 {
   "name": "kinq",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "LINQ for Node.js based on ES6",
   "main": "index.js",
   "types": "kinq.d.ts",
@@ -16,7 +16,7 @@
     "Node",
     "ES6"
   ],
-  "author": "SunshinyNeko",
+  "author": "UnsignedInt8",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/SunshinyNeko/Kinq/issues"
