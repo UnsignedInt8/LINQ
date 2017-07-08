@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/SunshinyNeko/Kinq.git"
+    "url": "git+ssh://git@github.com/UnsignedInt8/Kinq.git"
   },
   "keywords": [
     "LINQ",
@@ -19,9 +19,9 @@
   "author": "UnsignedInt8",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SunshinyNeko/Kinq/issues"
+    "url": "https://github.com/UnsignedInt8/Kinq/issues"
   },
-  "homepage": "https://github.com/SunshinyNeko/Kinq#readme",
+  "homepage": "https://github.com/UnsignedInt8/Kinq#readme",
   "devDependencies": {
     "mocha": "*"
   },
