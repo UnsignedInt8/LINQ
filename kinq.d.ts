@@ -150,7 +150,7 @@ declare interface _Linqable<T> extends Iterable<T> {
     * @param {(Function)} equalityComparer The equality comparer called per iteraction
     * @return A sequence that contains the set difference of the elements of two sequences.
     */
-  except(otherSequence: Iterable<T>, equalityComparer: (item1: T, item2: T) => boolean): _Linqable<T>;
+  except<T2>(otherSequence: Iterable<T2>, equalityComparer: (item1: T, item2: T2) => boolean): _Linqable<T>;
 
   /**
   * 
