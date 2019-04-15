@@ -15,6 +15,12 @@ What's LINQ?
 
 Now, LINQ is also available on Node.js(>=4.0) which named **KINQ**!
 
+Installation
+------------
+```
+npm i github:unsignedint8/kinq
+```
+
 KINQ Operators
 --------------
 
