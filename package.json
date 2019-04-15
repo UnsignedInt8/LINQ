@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/UnsignedInt8/Kinq.git"
+    "url": "git+ssh://git@github.com/UnsignedInt8/linq.git"
   },
   "keywords": [
     "LINQ",
