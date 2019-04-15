@@ -174,7 +174,7 @@ declare interface _Linqable<T> extends Iterable<T> {
     * Flattens a nested sequence (the nesting can be to any depth).
     * @param deep Default is true, If you pass false, the sequence will only be flattened a single level.
     */
-  flatten<U extends _Linqable<T[]>>(deep: boolean): T;
+  flatten<U extends _Linqable<T[]>>(deep?: boolean): T;
 
   /**
     * Groups the elements of a sequence according to a specified key selector function and projects the elements for each group by using a specified function.
@@ -414,12 +414,12 @@ declare interface _Linqable<T> extends Iterable<T> {
     * keySelector: (item) -> key (Required)
     * elementSelector: (item) -> value (Optional)
     */
-  toMap<TKey, TResult>(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult): Map<TKey, TResult>;
+  toMap<TKey, TResult>(keySelector: (item: T) => TKey, elementSelector: (item: T) => TResult): LinqableMap<TKey, TResult>;
 
   /**
    * Create a map of [key, value] tuples
    */
-  toMap<TKey, TItem>(): Map<TKey, TItem>;
+  toMap<TKey, TItem>(): LinqableMap<TKey, TItem>;
 
   /**
     * Produces the set union of two sequences by using a specified equalityComparer.
@@ -449,7 +449,7 @@ declare interface _Linqable<T> extends Iterable<T> {
     * resultSelector: (item, otherItem) -> result
     */
   zip<T2, TResult>(otherSequence: Iterable<T2>, resultSelector: (item: T, otherItem: T2) => TResult): _Linqable<TResult>;
-  zip<T2>(otherSequence: Iterable<T>): _Linqable<[T, T2]>;
+  zip<T2>(otherSequence: Iterable<T2>): _Linqable<[T, T2]>;
 
 }
 
@@ -478,11 +478,11 @@ declare interface String extends _Linqable<String> {
 
 }
 
-declare interface Map<K, V> extends _Linqable<[K, V]> {
+declare interface LinqableMap<K, V> extends _Linqable<[K, V]> {
 
 }
 
-declare interface Set<T> extends _Linqable<T> {
+declare interface LinqableSet<T> extends _Linqable<T> {
 
 }
 
