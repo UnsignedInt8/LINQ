@@ -1,6 +1,6 @@
 {
-  "name": "kinq",
-  "version": "0.0.14",
+  "name": "linq",
+  "version": "0.0.15",
   "description": "LINQ for Node.js based on ES6",
   "main": "index.js",
   "types": "kinq.d.ts",
@@ -19,9 +19,9 @@
   "author": "UnsignedInt8",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/UnsignedInt8/Kinq/issues"
+    "url": "https://github.com/UnsignedInt8/Linq/issues"
   },
-  "homepage": "https://github.com/UnsignedInt8/Kinq#readme",
+  "homepage": "https://github.com/UnsignedInt8/Linq#readme",
   "devDependencies": {
     "mocha": "*"
   },
