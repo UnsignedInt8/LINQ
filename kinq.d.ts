@@ -455,7 +455,7 @@ declare interface _Linqable<T> extends Iterable<T> {
 
 // export interface _Linqable;
 
-declare module 'kinq' {
+declare module 'linq' {
   /**
   * Convert iterable object to linqable
   * 
