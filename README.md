@@ -1,6 +1,6 @@
-# KINQ
+# LINQ
 
-**KINQ is LINQ for Node.js which is based on ES6.**
+**LINQ for Node.js and Modern Web Browers**
 
 [![Build Status](https://travis-ci.org/UnsignedInt8/Kinq.svg?branch=master)](https://travis-ci.org/UnsignedInt8/Kinq)
 
@@ -13,15 +13,25 @@ What's LINQ?
 > and updating data, and the technology can be extended to support
 > potentially any kind of data store.
 
-Now, LINQ is also available on Node.js(>=4.0) which named **KINQ**!
+Now, LINQ is also available on Node.js(>=4.0)!
 
 Installation
 ------------
 ```
-npm i github:unsignedint8/kinq
+npm i github:unsignedint8/linq
 ```
 
-KINQ Operators
+Getting Started
+---------------
+```
+import * as linq from 'linq';
+
+linq.enable(); // Globally hook array, map, set, etc.
+
+[1, 2, 3].where(i => i > 2).toArray();
+```
+
+LINQ Operators
 --------------
 
  - Linqable Operators
@@ -82,25 +92,9 @@ How to use?
 
 There are **linqable operators** and **immediate evaluation operators** in KINQ. Linqable operators are not going to evaluate the result what you wish till meets an immediate evaluation operator. So, it's also called **lazy evaluation**. Linqable operators can be chained, so you can combine multi-operators to execute complex query.
 
-All code below written by ES6.
+All code below written with ES6.
 
 ----------
-
-**Install KINQ**
-
-```
-npm install kinq --save
-```
-
-```
-const KINQ = require('kinq');
-
-// To enable KINQ, call it as function. KINQ is going to make Array, Map, Set, Buffer, String...... linqable.
-KINQ();
-
-// By using toLinqable function to transform an iterable object to linqable.
-KINQ.toLinqable(iterableObj);
-```
 
 **aggregate**
 
