@@ -3,7 +3,7 @@
   "version": "0.0.15",
   "description": "LINQ for Node.js based on ES6",
   "main": "index.js",
-  "types": "kinq.d.ts",
+  "types": "linq.d.ts",
   "scripts": {
     "test": "mocha test/**/*.js test/*.js"
   },
